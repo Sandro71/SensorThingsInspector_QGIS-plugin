@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/plugins/SensorThingsAPI_2" >
+        <file>icons/action-show-panel-icon.png</file>
+        <file>icons/action-identify-icon.png</file>
+        <file>icons/action-export-icon.png</file>
+    </qresource>
+</RCC>

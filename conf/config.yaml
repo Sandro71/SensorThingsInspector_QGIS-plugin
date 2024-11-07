@@ -1,0 +1,72 @@
+##-------------------------------------
+## SensorThingsAPI-2 - Settings
+##-------------------------------------
+
+## Plugin settings
+plugin:
+
+
+## Layer setting
+layer:
+   styles:
+     default:
+       fillOpacity: 0.3
+       graphicOpacity: 1.0
+       strokeWidth: 1
+       pointRadius: 4
+       undefColor: "gray"
+       
+          
+## Chart settings
+chart:
+   line_color: "#32CD32"
+   line_colors: 
+             - "#8e24aa"
+             - "#3949ab"
+             - "#4dd0e1"
+             - "#43a047"
+             - "#fdd835"
+             - "#ff5722"
+             - "#b97a57"
+             - "#ffaec9"
+             - "#7f7f7f"
+             - "#000000"
+   
+
+## analysis settings
+analysis:
+    observerd_properties_by_features: false
+             
+## CSV export settings
+export:
+   field_delimiter_char: ";"
+   
+   output_formats:
+             - "GPKG"
+            #- "ESRI Shapefile" ## ESRI shapefile
+             - "Arrow"          ## (Geo)Arrow: Arrow
+             - "Parquet"        ## (Geo)Parquet: 
+             - "DXF"            ## AutoCAD DXF: 
+             - "OpenFileGDB"    ## File ESRI Geodatabase: 
+             - "FlatGeobuf"     ## FlatGeobuf
+             - "XLSX"           ## Foglio di calcolo MS Office Open XML [XLSX]
+             - "ODS"            ## Foglio di calcolo Open Document [ODS]
+             - "GPX"            ## Formato GPS eXchange [GPX]
+             - "CSV"            ## Formato Testo Delimitato [CSV]
+             - "Geoconcept"     ## Geoconcept
+             - "GML"            ## Geography Markup Language [GML]
+             - "GeoJSON"        ## GeoJSON
+             - "GeoJSONSeq"     ## GeoJSON - Delimitato da Newline
+             - "GeoRSS"         ## GeoRSS
+             - "Interlis 1"     ## INTERLIS 1
+             - "Interlis 2"     ## INTERLIS 2
+             - "KML"            ## Keyhole Markup Language [KML]
+             - "DGN"            ## Microstation DGN
+             - "MapInfo MIF"    ## MIF Mapinfo
+             - "PGDUMP"         ## PostgreSQL SQL dump
+             - "S57"            ## S-57 Base file
+             - "SpatiaLite"     ## SpatiaLite
+             - "SQLite"         ## SQLite
+             - "MapInfo File"   ## TAB Mapinfo
+
+    
