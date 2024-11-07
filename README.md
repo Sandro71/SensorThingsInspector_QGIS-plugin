@@ -1,0 +1,2 @@
+# SensorThingsAPI_2_QGIS-plugin
+SensorThingsAPI_2 Description
