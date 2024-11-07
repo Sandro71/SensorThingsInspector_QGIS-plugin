@@ -39,5 +39,5 @@ jobs:
       - name: Step 4 - Archive code coverage results
         uses: actions/upload-artifact@v3
         with:
-          name: SensorThingsAPI_2.${{ env.PLUGIN_VERSION }}
+          name: SensorThingsAPI_2-${{ env.PLUGIN_VERSION }}
           path: /tmp/SensorThingsAPI
