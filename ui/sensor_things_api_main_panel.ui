@@ -178,7 +178,7 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>Relaod</string>
+                 <string>Reload</string>
                 </property>
                </widget>
               </item>
