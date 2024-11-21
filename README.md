@@ -47,7 +47,7 @@ immagine da sostituire con una aggiornata.
 ## 3. Feature inspection<br>
 The "Inspect" button activates a tool query a single location; when the feature is clicked on the map, a popup window appears describing the list of related Datastreams and MultiDatastreams available:
 
-<img width="200" alt="Show location information" src="[http://....jpg](https://github.com/user-attachments/assets/e744f075-a903-4404-8eef-e03a74bfb712)" />
+<img width="700" alt="Show location information" src="https://github.com/user-attachments/assets/e744f075-a903-4404-8eef-e03a74bfb712" />
 
 ## 4. Time series inspection<br>
 By clicking on one of  the icons placed in the observation column of the Multi/Datastreams table in the “features inspection” popup window, the user can access to the corresponding timeseries (Observations) and visualize data in either tabular or chart formats, with the possibility to modify the temporal extent of the subset currently shown.
