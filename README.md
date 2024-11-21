@@ -72,8 +72,10 @@ Clicking on the “Setup SensorThings layer” button the user can set:
 </p>
 
 Once the SensorThings layer is set you will see something like this:
- 
-immagine da sostituire con una aggiornata.
+
+<br>
+
+<img width="700" src="https://github.com/user-attachments/assets/e5eb4145-9fbf-4d4a-b2d1-01a1ce2d15e9" />
 
 ## 3. Feature inspection<br>
 The "Inspect" button activates a tool query a single location; when the feature is clicked on the map, a popup window appears describing the list of related Datastreams and MultiDatastreams available:
