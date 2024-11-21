@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Module to show\identify a SensorThings Lacation.
+"""Module to show\identify a SensorThingsInspector Lacation.
 
 Description
 -----------
@@ -32,12 +32,12 @@ from qgis.gui import QgsGui, QgsRubberBand
 from qgis.utils import iface
 
 # plugin modules
-from SensorThingsAPI_2 import plgConfig, __QGIS_PLUGIN_NAME__ 
-from SensorThingsAPI_2.log.logger import QgisLogger as logger
-from SensorThingsAPI_2.html.generate import htmlUtil
-from SensorThingsAPI_2.sensor_things_api_layer import SensorThingLayerUtils, SensorThingLoadDataTask
-from SensorThingsAPI_2.sensor_things_osservazioni_dlg import SensorThingsObservationDialog
-from SensorThingsAPI_2.sensor_things_browser import SensorThingsRequestError, SensorThingsWebView
+from SensorThingsInspector import plgConfig, __QGIS_PLUGIN_NAME__ 
+from SensorThingsInspector.log.logger import QgisLogger as logger
+from SensorThingsInspector.html.generate import htmlUtil
+from SensorThingsInspector.sensor_things_inspector_layer import SensorThingLayerUtils, SensorThingLoadDataTask
+from SensorThingsInspector.sensor_things_osservazioni_dlg import SensorThingsObservationDialog
+from SensorThingsInspector.sensor_things_browser import SensorThingsRequestError, SensorThingsWebView
 
 
 # 
@@ -117,7 +117,7 @@ class SensorThingsLocationDialog(QtWidgets.QDialog):
             if not feature:
                 return
             
-            # get faeature location attribute
+            # get feature location attribute
             location_id = SensorThingLayerUtils.getFeatureAttribute(feature, "id")
             location_name = SensorThingLayerUtils.getFeatureAttribute(feature, "name")
             location_desc = SensorThingLayerUtils.getFeatureAttribute(feature, "description")
@@ -148,8 +148,13 @@ class SensorThingsLocationDialog(QtWidgets.QDialog):
             self._dataSourceUri = provider.uri()
             service_url = QUrl(self._dataSourceUri.param('url')) ##QUrl(provider.dataSourceUri())
             if not service_url.isValid():
-                raise ValueError(
-                    "{}: {}".format(self.tr("Invalid layer URL"), service_url.toString()))
+                raise ValueError("{}: {}".format(self.tr("Invalid layer URL"), service_url.toString()))
+                
+            # extract SensorThing element
+            sta_entity = self._dataSourceUri.param('entity')
+            
+            if sta_entity not in ['Location', 'Datastream', 'MultiDatastream', 'FeatureOfInterest']:
+                raise ValueError("{}: {}".format(self.tr("Invalid SensorThings entity"), sta_entity))
                 
             # prepare data for HTM template
             self.page_data = {
@@ -164,13 +169,22 @@ class SensorThingsLocationDialog(QtWidgets.QDialog):
                 'features': feats_info,
                 'location': None,
                 'things': None,
+                'sta_entity': sta_entity
             }    
             
+            if sta_entity == 'Location':
+                self.setWindowTitle(self.tr("Location"))
+            elif sta_entity == 'Datastream':
+                self.setWindowTitle(self.tr("Datastream"))
+            elif sta_entity == 'MultiDatastream':
+                self.setWindowTitle(self.tr("MultiDatastream"))
+            elif sta_entity == 'FeatureOfInterest':
+                self.setWindowTitle(self.tr("Feature Of Interest"))
             
             # Request location data
             url = SensorThingLayerUtils.getUrl(layer)
             
-            self._st_load_task = self.getRequest(url=url, entity='Location', featureLimit=1000, expandTo=None, sql="id eq {}".format(SensorThingLayerUtils.quoteValue(location_id)), prefix_attribs=None)
+            self._st_load_task = self.getRequest(url=url, entity=sta_entity, featureLimit=1000, expandTo=None, sql="id eq {}".format(SensorThingLayerUtils.quoteValue(location_id)), prefix_attribs=None)
             self._st_load_task.dataLoaded.connect(self._location_callback)
             self._st_load_task.get()
             
@@ -180,12 +194,12 @@ class SensorThingsLocationDialog(QtWidgets.QDialog):
         except SensorThingsRequestError as ex:
             logger.restoreOverrideCursor()
             self.logError(
-                "{}: {}".format(self.tr("Location dialog visualization"), str(ex)))
+                "{}: {}".format(self.tr("Entity dialog visualization"), str(ex)))
             
         except Exception as ex:
             logger.restoreOverrideCursor()
             self.logError(
-                "{}: {}".format(self.tr("Location dialog visualization"), str(ex)))
+                "{}: {}".format(self.tr("Entity dialog visualization"), str(ex)))
     
     
     
@@ -267,19 +281,48 @@ class SensorThingsLocationDialog(QtWidgets.QDialog):
                 return
             
             # store data
+            sta_entity = self.page_data['sta_entity'] or '' 
+            
             loc_data = load_task.data[0] if len(load_task.data) > 0 else {}
+            
+            if sta_entity == 'Datastream' or sta_entity == 'MultiDatastream':
+                loc_data['name'] = "{} {}".format(self.tr("Area observed by"), loc_data['Name'])
+                loc_data['description'] = ''
             
             self.page_data['location'] = loc_data
             self.page_data['location']['url'] = load_task.getUrl()
             
             # Request things data
-            self._st_load_task = self.getRequest(url=load_task.getUrl(), entity='Location', featureLimit=1000, expandTo='Thing', sql=load_task.getFilter(), prefix_attribs='Thing_')
+            if sta_entity == 'Location':
+                self._st_load_task = self.getRequest(url=load_task.getUrl(), entity='Location', featureLimit=1000, expandTo='Thing', sql=load_task.getFilter(), prefix_attribs='Thing_')
+            
+            elif sta_entity == 'FeatureOfInterest':
+                self._st_load_task = self.getRequest(url=load_task.getUrl(), entity='FeatureOfInterest', featureLimit=1000, expandTo='Observation:limit=1;Datastream;Thing', sql=load_task.getFilter(), prefix_attribs='Observation_Datastream_Thing_')
+            
+            elif sta_entity == 'Datastream' or sta_entity == 'MultiDatastream':
+                self._st_load_task = self.getRequest(url=load_task.getUrl(), entity=sta_entity, featureLimit=1000, expandTo='Thing', sql=load_task.getFilter(), prefix_attribs='Thing_')
+            
+            else:
+                raise ValueError("{}: {}".format(self.tr("Invalid SensorThings entity"), sta_entity))
+            
+            """
+            https://frost.labservice.it/FROST-Server/v1.1/FeaturesOfInterest?$expand=Observations/Datastream/Thing
+            limit 1 on observation + sql id eq id_foi
+            
+            https://frost.labservice.it/FROST-Server/v1.1/Datastreams?$expand=Thing
+            sql id eq id_ds
+            
+            https://frost.labservice.it/FROST-Server/v1.1/MultiDatastreams?$expand=Thing
+            sql id eq id_m_ds
+            """
+            
+            
             self._st_load_task.dataLoaded.connect(self._things_callback)
             self._st_load_task.get()
             
         except Exception as ex:
             self.logError(
-                "{}: {}".format(self.tr("Location dialog visualization"), str(ex)))
+                "{}: {}".format(self.tr("Entity dialog visualization"), str(ex)))
     
     
      
@@ -302,8 +345,9 @@ class SensorThingsLocationDialog(QtWidgets.QDialog):
             
             self.page_data['things'] = load_task.data or []
             
-            for t in self.page_data['things']:
-                t['url'] = url
+            for thing in self.page_data['things']:
+                thing['url'] = url
+                thing['description'] = (thing['description'] or '').strip() or self.tr("No description")
             
             # try to show dialog
             self._show_callback()

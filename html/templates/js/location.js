@@ -1,5 +1,5 @@
 /**
- * SensorThings API Plugin
+ * SensorThingsInspector Plugin
  *
  *  location.js
  *
@@ -264,7 +264,7 @@ $(document).ready(function() {
 
 				// show Observations data
     			pyjsapi.loadObservationsData(rowData, {
-					"queryParams": dtFilterRange.getQueryParams(),
+					"queryParams": dtFilterRange.getQueryParams(1000),
 					"filterTime": dtFilterRange.toString(),
 					"isMultidatastream": isMultidataStream
 				});

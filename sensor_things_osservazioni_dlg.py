@@ -33,12 +33,12 @@ from qgis.PyQt import QtWidgets
 from qgis.core import QgsDataSourceUri
 
 # plugin modules
-from SensorThingsAPI_2 import __QGIS_PLUGIN_NAME__, plgConfig
-from SensorThingsAPI_2.log.logger import QgisLogger as logger
-from SensorThingsAPI_2.utils.file import FileUtil
-from SensorThingsAPI_2.html.generate import htmlUtil 
-from SensorThingsAPI_2.sensor_things_api_layer import SensorThingLayerUtils, SensorThingLoadDataTask
-from SensorThingsAPI_2.sensor_things_browser import SensorThingsWebView, SensorThingsRequestError
+from SensorThingsInspector import __QGIS_PLUGIN_NAME__, plgConfig
+from SensorThingsInspector.log.logger import QgisLogger as logger
+from SensorThingsInspector.utils.file import FileUtil
+from SensorThingsInspector.html.generate import htmlUtil 
+from SensorThingsInspector.sensor_things_inspector_layer import SensorThingLayerUtils, SensorThingLoadDataTask
+from SensorThingsInspector.sensor_things_browser import SensorThingsWebView, SensorThingsRequestError
 
 
 # 
@@ -191,7 +191,7 @@ class SensorThingsObservationDialog(QtWidgets.QDialog):
             if not oss_data:
                 logger.msgbox(
                     logger.Level.Warning, 
-                    "{}: \n{}".format(self.tr("No observations found in the range of dates"), date_range_text),
+                    "{}: \n{}".format(self.tr("No Observation found in the range of dates"), date_range_text),
                     title=__QGIS_PLUGIN_NAME__
                 )
                 return

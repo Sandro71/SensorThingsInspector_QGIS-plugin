@@ -1,8 +1,8 @@
 #/***************************************************************************
-# SensorThingsAPI-2
+# SensorThingsInspector
 #
 # The plugin enables QGIS software (www.qgis.org) to access dynamic data from sensors, 
-using SensorThings API protocol (https://www.ogc.org/standards/sensorthings)
+using SensorThings Inspector protocol (https://www.ogc.org/standards/sensorthings)
 #							 -------------------
 #		begin				: 2024-04-22
 #		git sha				: $Format:%H$
@@ -39,15 +39,15 @@ LOCALES =
 # translation
 SOURCES = \
 	__init__.py \
-	sensor_things_api.py sensor_things_api_dialog.py
+	sensor_things_inspector.py sensor_things_inspector_dialog.py
 
-PLUGINNAME = sensor_things_api
+PLUGINNAME = sensor_things_inspector
 
 PY_FILES = \
 	__init__.py \
-	sensor_things_api.py sensor_things_api_dialog.py
+	sensor_things_inspector.py sensor_things_inspector_dialog.py
 
-UI_FILES = sensor_things_api_dialog_base.ui
+UI_FILES = sensor_things_inspector_dialog_base.ui
 
 EXTRAS = metadata.txt icon.png
 

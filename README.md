@@ -1,25 +1,25 @@
-# SensorThingsAPI QGIS plugin
-The SensorThings API plugin for QGIS has been developed by Deda Next (former Dedagroup Public Services, https://www.dedanext.it/) within the AIR-BREAK project (co-funded by UIA program, https://www.uia-initiative.eu/en/uia-cities/ferrara).
+# SensorThingsInspector QGIS plugin
+The SensorThingsInspector plugin for QGIS has been developed by Deda Next (former Dedagroup Public Services, https://www.dedanext.it/) within the AIR-BREAK project (co-funded by UIA program, https://www.uia-initiative.eu/en/uia-cities/ferrara).
 
-The plugin enables QGIS software (www.qgis.org) to access dynamic data from sensors, using SensorThings API protocol (https://www.ogc.org/standards/sensorthings)
+The plugin enables QGIS software (www.qgis.org) to access dynamic data from sensors, using SensorThingsInspector protocol (https://www.ogc.org/standards/sensorthings)
 
-The overall objective is to provide functionalities for accessing SensorThings API endpoints and interact with temporal data (timeseries).
+The overall objective is to provide functionalities for accessing SensorThingsInspector endpoints and interact with temporal data (timeseries).
 
-Hereafter, you find "how-to" instructions for using the SensorThingsAPI plugin in QGIS. 
+Hereafter, you find "how-to" instructions for using the SensorThingsInspector plugin in QGIS. 
 
-**To correctly download the plugin from this repository as zip file, please see Issue https://github.com/AirBreak-UIA/SensorThingsAPI_QGIS-plugin/issues/1**
+**To correctly download the plugin from this repository as zip file, please see Issue https://github.com/AirBreak-UIA/SensorThingsInspector_QGIS-plugin/issues/1**
 
 1)	Once installed (as local zip file), the user interface shows a simple menu and a toolbar with two commands:
--	Upload 'SensorThingsAPI' layer from remote server
+-	Upload 'SensorThingsInspector' layer from remote server
 -	Show location information
 
 Note: the following screenshots show the user interface in Italian.
 
-<img width="208" alt="SensorThingsAPI menu" src="https://user-images.githubusercontent.com/110025591/181604383-cba059b8-89fc-4ae1-bac2-887287ba6aa2.png">
+<img width="208" alt="SensorThingsInspector menu" src="https://user-images.githubusercontent.com/110025591/181604383-cba059b8-89fc-4ae1-bac2-887287ba6aa2.png">
 
-2)	The command Upload 'SensorThingsAPI' layer from remote server allows to add the Locations of a SensorThings endpoint as a geographical layer; in the popup window, select the button New and write the name and the URL of the endpoint to connect to: 
+2)	The command Upload 'SensorThingsInspector' layer from remote server allows to add the Locations of a SensorThings endpoint as a geographical layer; in the popup window, select the button New and write the name and the URL of the endpoint to connect to: 
  
-<img width="416" alt="New SensorThingsAPI endpoint" src="https://user-images.githubusercontent.com/110025591/181604880-6bef7010-a593-43cd-9f5d-c04313552baf.png">
+<img width="416" alt="New SensorThingsInspector endpoint" src="https://user-images.githubusercontent.com/110025591/181604880-6bef7010-a593-43cd-9f5d-c04313552baf.png">
 
 To test the plugin, the following endpoints can be configured:
 -	https://iot.comune.fe.it/FROST-Server/v1.1/Locations (data about air quality, bike transits, traffic by Municipality of Ferrara, Italy)

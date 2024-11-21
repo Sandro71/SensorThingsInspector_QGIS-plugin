@@ -1,5 +1,5 @@
 /**
- * SensorThings API Plugin
+ * SensorThingsInspector Plugin
  *
  *  Localization utility functions.
  *

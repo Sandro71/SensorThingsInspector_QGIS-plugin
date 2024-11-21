@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""SensorThingsAPI 2 config class
+"""SensorThingsInspector config class
 
 Description
 -----------
@@ -32,7 +32,7 @@ from qgis.PyQt.QtCore import QObject
 
 # 
 #-----------------------------------------------------------
-class SensorThingsApiConfig(QObject):
+class SensorThingsInspectorConfig(QObject):
     """ Plugin configuration class. """
     
     CFG_PLUGIN_FILE_NAME = 'config.yaml'

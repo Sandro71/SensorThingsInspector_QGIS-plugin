@@ -1,5 +1,5 @@
 /**
- * SensorThings API Plugin
+ * SensorThingsInspector Plugin
  *
  *  Date utility functions.
  *
@@ -109,7 +109,7 @@ class SensorThingsDateRange {
 		}
 	}
 	
-	getQueryParams() {
+	getQueryParams(limit) {
 		
 		var filter = [
 			
@@ -120,12 +120,15 @@ class SensorThingsDateRange {
 			
 		].join(" ");
 		
-		return [
-            "orderby=phenomenonTime,desc",
-            "limit=1000",
-            "filter="+filter
-            
-		].join(':')
+        var query_array = ["orderby=phenomenonTime,desc"];
+        
+        if (!!limit) {
+            query_array.push("limit="+limit);
+        }
+   
+        query_array.push("filter="+filter);
+        
+		return query_array.join(':')
 	}
 	
 	toString() {

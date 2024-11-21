@@ -1,5 +1,5 @@
 /*!
- * SensorThings APIPlugin
+ * SensorThingsInspector Plugin
  *
  *  observations.js
  */
@@ -564,7 +564,7 @@ $(document).ready(function() {
 		var dtStart = correctDatePickerDate($("#datePickerStart"));
 		var dtEnd = correctDatePickerDate( $("#datePickerEnd"));
 		var dateRange = new SensorThingsDateRange().getFilterRange(dtStart, dtEnd);
-		pageData['queryParams'] = dateRange.getQueryParams();
+		pageData['queryParams'] = dateRange.getQueryParams(1000);
 		
 		// clear and reload data
 		var table = $('#valori').DataTable();
@@ -581,7 +581,7 @@ $(document).ready(function() {
 		var dtStart = correctDatePickerDate($("#datePickerStart"));
 		var dtEnd = correctDatePickerDate( $("#datePickerEnd"));
 		var dateRange = new SensorThingsDateRange().getFilterRange(dtStart, dtEnd);
-		var queryParams = dateRange.getQueryParams();
+		var queryParams = dateRange.getQueryParams(1000);
         
 		// compose file name
 		var propName = propData['name'] || 'Osservazioni';

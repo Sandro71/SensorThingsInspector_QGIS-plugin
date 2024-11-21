@@ -1,5 +1,5 @@
 ##-------------------------------------
-## SensorThingsAPI-2 - Settings
+## SensorThingsInspector - Settings
 ##-------------------------------------
 
 ## Plugin settings
@@ -39,6 +39,8 @@ analysis:
              
 ## CSV export settings
 export:
+   add_to_map: true
+    
    field_delimiter_char: ";"
    
    output_formats:

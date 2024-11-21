@@ -8,4 +8,4 @@ call "%dir_bin%\qt5_env.bat"
 rem call "%dir_bin%\py3_env.bat"
 
 @echo on
-call "%dir_script%\pylupdate5" .\SensorThingsAPI.pro
+call "%dir_script%\pylupdate5" .\SensorThingsInspector.pro

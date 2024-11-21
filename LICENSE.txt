@@ -1,4 +1,4 @@
-SensorThings API * 2024 Deda Next srl
+Sensor Things Inspector * 2024 Deda Next srl
 
 Licensed under the terms of GNU GPL v3 (or any layer)
 http://www.gnu.org/copyleft/gpl.html

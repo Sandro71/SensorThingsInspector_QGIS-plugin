@@ -34,8 +34,8 @@ from qgis.PyQt.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetwork
 # pylint: disable=no-name-in-module
 from qgis.PyQt.QtWebKitWidgets import QWebView, QWebPage
 # plugin modules
-from SensorThingsAPI_2 import __QGIS_PLUGIN_NAME__, __PLG_DEBUG__
-from SensorThingsAPI_2.log.logger import QgisLogger as logger
+from SensorThingsInspector import __QGIS_PLUGIN_NAME__, __PLG_DEBUG__
+from SensorThingsInspector.log.logger import QgisLogger as logger
 
 
 
@@ -59,7 +59,7 @@ class SensorThingsNetworkAccessManager(QNetworkAccessManager):
     def createRequest(self, op, request, outgoingData=None):
         strURL = str(request.url().toString())
         if __PLG_DEBUG__:
-            logger.log(logger.Level.Info, "{}: {}".format(self.tr("Request url"), strURL))
+            logger.log(logger.Level.Info, "{}: {}".format(self.tr("Request URL"), strURL))
             
         if self._deny_external_links and\
            not request.url().isLocalFile():
@@ -87,7 +87,7 @@ class SensorThingsNetworkAccessManager(QNetworkAccessManager):
         
         # debug
         if __PLG_DEBUG__:
-            logger.log(logger.Level.Info, "{}: {}".format(SensorThingsNetworkAccessManager.tr("Request url"), url))
+            logger.log(logger.Level.Info, "{}: {}".format(SensorThingsNetworkAccessManager.tr("Request URL"), url))
         
         # send request 
         reply = nam.blockingGet(request)

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Module of SensorThings layer utilities.
+"""Module of SensorThingsInspector layer utilities.
 
 Description
 -----------
@@ -176,7 +176,8 @@ class SensorThingLoadDataTask(QgsTask):
         """Rename attributes using mapping parameter passed in object creation."""
         if self.rename_attribs and type(rec) is dict:
             for oldkey, newKey in self.rename_attribs.items():
-                rec[newKey] = rec.pop(oldkey) 
+                if oldkey in rec:
+                    rec[newKey] = rec.pop(oldkey) 
         return rec
 
 
@@ -186,7 +187,7 @@ class SensorThingLayerUtils:
 
     @staticmethod
     def tr(message):
-        """Get the translation for a string using Qt translation API.
+        """Get the translation for a string using Qt translation.
 
         We implement this ourselves since we do not inherit QObject.
 

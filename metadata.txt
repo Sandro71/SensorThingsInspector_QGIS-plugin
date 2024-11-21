@@ -3,14 +3,14 @@
 # This file should be included when you package your plugin.# Mandatory items:
 
 [general]
-name=Sensor Things API 2
+name=Sensor Things Inspector
 qgisMinimumVersion=3.37
-description=The plugin enables QGIS software (www.qgis.org) to access dynamic data from sensors, using SensorThings API protocol (https://www.ogc.org/standards/sensorthings)
-version=1.0.1
+description=The plugin enables QGIS software (www.qgis.org) to access dynamic data from sensors, using SensorThingsInspector protocol (https://www.ogc.org/standards/sensorthings)
+version=1.1.0
 author=Deda Next (Sandro Moretti)
 email=sandro.moretti@dedagroup.it
 
-about=The SensorThings API 2 plugin for QGIS has been developed by Deda Next (Sandro Moretti) within the AIR-BREAK project. The plugin enables QGIS software to access dynamic data from sensors, using SensorThings API protocol. The overall objective is to provide functionalities for accessing SensorThings API endpoints and interact with temporal data (timeseries).
+about=The SensorThingsInspector plugin for QGIS has been developed by Deda Next (Sandro Moretti) within the AIR-BREAK project. The plugin enables QGIS software to access dynamic data from sensors, using SensorThingsInspector protocol. The overall objective is to provide functionalities for accessing SensorThingsInspector endpoints and interact with temporal data (timeseries).
 
 tracker=http://bugs
 repository=http://repo
