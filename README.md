@@ -1,11 +1,11 @@
-SensorThings InspectorAPI Viewer plugin
-The SensorThings Inspector plugin is an evolution of the new old SensorThingsAPI Viewer plugin for QGIS and has been developed by Deda Next (www.dedanext.it) with the support of Faunalia (www.faunalia.eu) and BRGM (https://www.brgm.fr/en), the French Geological Survey.….
-The plugin enables QGIS software (www.qgis.org, versions 3.384 onwards) to inspectview time-series data provided by endpoints compliant with OGCvia SensorThings API standard protocol (https://www.ogc.org/standards/sensorthings).
-This readme is a brief walkthrough on how to install and use Hereafter, you find "how-to" instructions for using the SensorThingsAPI plugin in QGIS.
-1.	Installation
-The plugin can be downloaded from this repository as a zip file.
-To correctly download the plugin from this repository as zip file, … 
-1.	Once installed (as a local zip file), the user interface shows a simple menu and a toolbar with fourtwo commands:
+## SensorThings Inspector plugin
+
+The SensorThings Inspector plugin is an evolution of the old SensorThingsAPI Viewer plugin for QGIS and has been developed by Deda Next (www.dedanext.it) with the support of Faunalia (www.faunalia.eu) and BRGM (https://www.brgm.fr/en), the French Geological Survey.
+
+The plugin enables QGIS (www.qgis.org, versions 3.384 onwards) to inspect time-series data provided by endpoints compliant with OGC SensorThings API standard protocol (https://www.ogc.org/standards/sensorthings).
+
+This readme is a brief walkthrough on how to install and use the plugin in QGIS.
+1.	Installation<br>The plugin can be downloaded from this repository as a zip file.<br>Once installed (as a local zip file), the user interface shows a simple menu and a toolbar with four commands:
 •	Setup Upload 'SensorThings API' layer from remote server
 •	Inspect Show location informationfeatures in layer
 •	Export layer
