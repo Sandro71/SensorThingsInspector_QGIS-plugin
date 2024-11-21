@@ -33,11 +33,11 @@ jobs:
       
       - name: Step 3 - Add artifacts to publish to the dist folder
         run: |
-          mkdir -p /tmp/SensorThingsAPI_2/SensorThingsAPI_2
-          rsync -r ./. /tmp/SensorThingsAPI_2/SensorThingsAPI_2 --exclude .git --exclude .github
+          mkdir -p /tmp/SensorThingsInspector/SensorThingsInspector
+          rsync -r ./. /tmp/SensorThingsInspector/SensorThingsInspector --exclude .git --exclude .github
           
       - name: Step 4 - Archive code coverage results
         uses: actions/upload-artifact@v3
         with:
-          name: SensorThingsAPI_2-${{ env.PLUGIN_VERSION }}
-          path: /tmp/SensorThingsAPI_2
+          name: SensorThingsInspector-${{ env.PLUGIN_VERSION }}
+          path: /tmp/SensorThingsInspector
