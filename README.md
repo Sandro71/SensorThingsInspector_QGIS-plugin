@@ -51,7 +51,25 @@ Clicking on the “Setup SensorThings layer” button the user can set:
 - the layer style
 - the dynamic temporal control of the layer
 
-immagine da sostituire con una aggiornata che mostri il contenuto aggiornato del pannello del plugin dopo la riorganizzazione dei tab (magari mostrando screenshots di tutti e 4 i tabs?).
+<br>
+
+<p>
+  <img width="400" src="https://github.com/user-attachments/assets/dab0a133-7ce5-47d5-a63a-7759cce08c17" />
+  <br>
+  <em>Source</em>
+</p>
+
+<p>
+  <img width="400" src="https://github.com/user-attachments/assets/4da99710-dc8c-4895-9d62-2fa61baf0508" />
+  <br>
+  <em>Style</em>
+</p>
+
+<p>
+  <img width="400" src="https://github.com/user-attachments/assets/aff78258-d3a4-477b-83d0-8e9b33cef35c" />
+  <br>
+  <em>Temporal Analysis</em>
+</p>
 
 Once the SensorThings layer is set you will see something like this:
  
