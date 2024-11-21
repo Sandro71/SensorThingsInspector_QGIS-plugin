@@ -1,53 +1,51 @@
-# SensorThingsInspector QGIS plugin
-The SensorThingsInspector plugin for QGIS has been developed by Deda Next (former Dedagroup Public Services, https://www.dedanext.it/) within the AIR-BREAK project (co-funded by UIA program, https://www.uia-initiative.eu/en/uia-cities/ferrara).
-
-The plugin enables QGIS software (www.qgis.org) to access dynamic data from sensors, using SensorThingsInspector protocol (https://www.ogc.org/standards/sensorthings)
-
-The overall objective is to provide functionalities for accessing SensorThingsInspector endpoints and interact with temporal data (timeseries).
-
-Hereafter, you find "how-to" instructions for using the SensorThingsInspector plugin in QGIS. 
-
-**To correctly download the plugin from this repository as zip file, please see Issue https://github.com/AirBreak-UIA/SensorThingsInspector_QGIS-plugin/issues/1**
-
-1)	Once installed (as local zip file), the user interface shows a simple menu and a toolbar with two commands:
--	Upload 'SensorThingsInspector' layer from remote server
--	Show location information
-
+SensorThings InspectorAPI Viewer plugin
+The SensorThings Inspector plugin is an evolution of the new old SensorThingsAPI Viewer plugin for QGIS and has been developed by Deda Next (www.dedanext.it) with the support of Faunalia (www.faunalia.eu) and BRGM (https://www.brgm.fr/en), the French Geological Survey.….
+The plugin enables QGIS software (www.qgis.org, versions 3.384 onwards) to inspectview time-series data provided by endpoints compliant with OGCvia SensorThings API standard protocol (https://www.ogc.org/standards/sensorthings).
+This readme is a brief walkthrough on how to install and use Hereafter, you find "how-to" instructions for using the SensorThingsAPI plugin in QGIS.
+1.	Installation
+The plugin can be downloaded from this repository as a zip file.
+To correctly download the plugin from this repository as zip file, … 
+1.	Once installed (as a local zip file), the user interface shows a simple menu and a toolbar with fourtwo commands:
+•	Setup Upload 'SensorThings API' layer from remote server
+•	Inspect Show location informationfeatures in layer
+•	Export layer
 Note: the following screenshots show the user interface in Italian.
-
-<img width="208" alt="SensorThingsInspector menu" src="https://user-images.githubusercontent.com/110025591/181604383-cba059b8-89fc-4ae1-bac2-887287ba6aa2.png">
-
-2)	The command Upload 'SensorThingsInspector' layer from remote server allows to add the Locations of a SensorThings endpoint as a geographical layer; in the popup window, select the button New and write the name and the URL of the endpoint to connect to: 
+  
+immagine da sostituire con una aggiornata dopo la riorganizzazione di toolbar e menu.
+In Italiano le voci saranno: Imposta il layer SensorThings, Ispeziona gli elementi del layer, Esporta il layer.
+To test the plugin, the following endpoints can be configuredused:
+•	https://iot.comune.fe.it/FROST-Server/v1.1/Locations 
+(data about air quality, bike transits, traffic by Municipality of Ferrara, Italy)
+•	https://airquality-frost.k8s.ilt-dmz.iosb.fraunhofer.de/v1.1/Locations 
+(data about air quality from AQ stations inaround Europe, by Fraunhofer Institute, Germany)
+•	https://demography.k8s.ilt-dmz.iosb.fraunhofer.de/v1.1/Locations 
+(demographic statistics, by Fraunhofer Institute, Germany)
+•	https://iot.hamburg.de/v1.1/Locations 
+(fromby the City of Hamburg)
+•	https://ogc-demo.k8s.ilt-dmz.iosb.fraunhofer.de/v1.1/Locations 
+(water data by OGC)
+•	http://covidsta.hft-stuttgart.de/server/v1.1/Locations 
+(COVID data by HFT Stuttgart, Germany)
+.O.. other public endpoints are also available here:
+ at https://github.com/opengeospatial/sensorthings/blob/master/PublicEndPoints.md
+2.	Setup
+Clicking on the “Setup SensorThings layer” the Connect button the user can set:
+•	the STA endpoint to connect to;
+•	the structure of the SensorThings layer to be used as a basis for the inspection: 
+the chosen structure has to include geometrical features (either Locations, FeaturesOfInterest or Multi/Datastreams) in order for the inspector tool to work;
+•	the time extent limits to be used to inspect the time series of Observations; 
+•	the layer style
+•	the dynamic temporal control of the layer
+	
+	 to list all the locations available and optionally filter them using their own properties; select one or more items and clic the button Add (or double clic).
  
-<img width="416" alt="New SensorThingsInspector endpoint" src="https://user-images.githubusercontent.com/110025591/181604880-6bef7010-a593-43cd-9f5d-c04313552baf.png">
+immagine da sostituire con una aggiornata che mostri il contenuto aggiornato del pannello del plugin dopo la riorganizzazione dei tab (magari mostrando screenshots di tutti e 4 i tabs?).
+O... once the SensorThings layer is set selected the Locations to be added in the map, you will see something like this:
+ 
+immagine da sostituire con una aggiornata.
+3.	Feature inspection
+3.	Tthe command "Show location informationInspect features in layer" button activates a tool opens a new popup window to query a single location; when the location feature is clicked on the map, the a popup window appears describing  with the list of related Datastreams and MultiDatastreams available(measured parameter) available:
+ 
+4.	Time series inspection
+4.	Bby clicking on one of  the icons placed in the observation column of the Multi/Datastreams table in the “features inspection” popup windowthe right-side button, the user can has the possibility to access to the corresponding timeseries  (Oobservations) for each parameter and visualizeget data in either tabular or chart formats, with the possibility to change modify the temporal extent of the subset currently shown.filter (dates from/to):
 
-To test the plugin, the following endpoints can be configured:
--	https://iot.comune.fe.it/FROST-Server/v1.1/Locations (data about air quality, bike transits, traffic by Municipality of Ferrara, Italy)
--	https://airquality-frost.k8s.ilt-dmz.iosb.fraunhofer.de/v1.1/Locations (data about air quality from AQ stations in Europe, by Fraunhofer Institute, Germany)
-- https://demography.k8s.ilt-dmz.iosb.fraunhofer.de/v1.1/Locations (demographic statistics, by Fraunhofer Institute, Germany)
--	https://iot.hamburg.de/v1.1/Locations (by City of Hamburg)
--	https://ogc-demo.k8s.ilt-dmz.iosb.fraunhofer.de/v1.1/Locations (water data by OGC)
--	http://covidsta.hft-stuttgart.de/server/v1.1/Locations (COVID data by HFT Stuttgart, Germany)
-
-... other public endpoints also available at https://github.com/opengeospatial/sensorthings/blob/master/PublicEndPoints.md
-
-
-Click the Connect button to list all the locations available and optionally filter them using their own properties; select one or more items and clic the button Add (or double clic).
-
-<img width="421" alt="List of Locations (grouped by properties)" src="https://user-images.githubusercontent.com/110025591/181605595-d32b7b29-b68a-4143-a2ab-1e66ab738a09.png">
-
-... once selected the Locations to be added in the map, you will see something like this:
-
-<img width="960" alt="Map with Locations from SensorThings server" src="https://user-images.githubusercontent.com/110025591/181605921-3ef9ed37-4948-4fc0-b659-dd290c7691c9.png">
-
-3)	the command "Show location information" opens a new popup window to query a single location; when the location is clicked on the map, the popup appears with the list of Datastreams (measured parameter) available:
-
-<img width="691" alt="Show location information" src="https://user-images.githubusercontent.com/110025591/181607537-35ed6065-6e95-4410-8061-627aa8092dae.png">
-
-4) by clicking on the right-side button, user has the possibility to access timeseries (observations) for each parameter and get data in either tabular or chart formats, with the possibility to change temporal filter (dates from/to):
-
-<img width="564" alt="Data table" src="https://user-images.githubusercontent.com/110025591/181607752-46ddd0fc-2bb9-41aa-99bb-4cd224021f23.png">
-
-5) User can also download data (bottom-right icon) in CSV format and elaborate them in spreadsheets or other software:
-
-<img width="565" alt="Data chart and download" src="https://user-images.githubusercontent.com/110025591/181607891-b8cb5a2c-0f2f-47a9-a78e-c14460bb8114.png">
