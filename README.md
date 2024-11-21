@@ -39,11 +39,12 @@ Clicking on the “Setup SensorThings layer” button the user can set:
 
 immagine da sostituire con una aggiornata che mostri il contenuto aggiornato del pannello del plugin dopo la riorganizzazione dei tab (magari mostrando screenshots di tutti e 4 i tabs?).
 
-O... once the SensorThings layer is set selected the Locations to be added in the map, you will see something like this:
+Once the SensorThings layer is set you will see something like this:
  
 immagine da sostituire con una aggiornata.
-3.	Feature inspection
-3.	Tthe command "Show location informationInspect features in layer" button activates a tool opens a new popup window to query a single location; when the location feature is clicked on the map, the a popup window appears describing  with the list of related Datastreams and MultiDatastreams available(measured parameter) available:
+
+3.	Feature inspection<br>
+The "Inspect" button activates a tool query a single location; when the feature is clicked on the map, a popup window appears describing the list of related Datastreams and MultiDatastreams available:
  
 4.	Time series inspection
 4.	Bby clicking on one of  the icons placed in the observation column of the Multi/Datastreams table in the “features inspection” popup windowthe right-side button, the user can has the possibility to access to the corresponding timeseries  (Oobservations) for each parameter and visualizeget data in either tabular or chart formats, with the possibility to change modify the temporal extent of the subset currently shown.filter (dates from/to):
