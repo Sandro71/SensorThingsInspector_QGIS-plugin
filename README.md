@@ -15,20 +15,17 @@ Note: the following screenshots show the user interface in Italian.
   
 immagine da sostituire con una aggiornata dopo la riorganizzazione di toolbar e menu.
 In Italiano le voci saranno: Imposta il layer SensorThings, Ispeziona gli elementi del layer, Esporta il layer.
-To test the plugin, the following endpoints can be configuredused:
-•	https://iot.comune.fe.it/FROST-Server/v1.1/Locations 
-(data about air quality, bike transits, traffic by Municipality of Ferrara, Italy)
-•	https://airquality-frost.k8s.ilt-dmz.iosb.fraunhofer.de/v1.1/Locations 
-(data about air quality from AQ stations inaround Europe, by Fraunhofer Institute, Germany)
-•	https://demography.k8s.ilt-dmz.iosb.fraunhofer.de/v1.1/Locations 
-(demographic statistics, by Fraunhofer Institute, Germany)
-•	https://iot.hamburg.de/v1.1/Locations 
-(fromby the City of Hamburg)
-•	https://ogc-demo.k8s.ilt-dmz.iosb.fraunhofer.de/v1.1/Locations 
-(water data by OGC)
-•	http://covidsta.hft-stuttgart.de/server/v1.1/Locations 
-(COVID data by HFT Stuttgart, Germany)
-.O.. other public endpoints are also available here:
+
+To test the plugin, the following endpoints can be used:
+
+- https://iot.comune.fe.it/FROST-Server/v1.1/Locations <br>(data about air quality, bike transits, traffic by Municipality of Ferrara, Italy)
+- https://airquality-frost.k8s.ilt-dmz.iosb.fraunhofer.de/v1.1/Locations <br>(data about air quality from around Europe, by Fraunhofer Institute, Germany)
+- https://demography.k8s.ilt-dmz.iosb.fraunhofer.de/v1.1/Locations <br>(demographic statistics, by Fraunhofer Institute, Germany)
+- https://iot.hamburg.de/v1.1/Locations <br>(from the City of Hamburg)
+- https://ogc-demo.k8s.ilt-dmz.iosb.fraunhofer.de/v1.1/Locations <br>(water data by OGC)
+- http://covidsta.hft-stuttgart.de/server/v1.1/Locations <br>(COVID data by HFT Stuttgart, Germany)
+
+Other public endpoints are also available here:
  at https://github.com/opengeospatial/sensorthings/blob/master/PublicEndPoints.md
 2.	Setup
 Clicking on the “Setup SensorThings layer” the Connect button the user can set:
