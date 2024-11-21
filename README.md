@@ -13,6 +13,8 @@ The plugin can be downloaded from this repository as a zip file.<br>Once install
 - Inspect features in layer
 - Export layer
 
+<br>
+
 Note: the following screenshots show the user interface in Italian.
 
 <p>
@@ -27,8 +29,7 @@ Note: the following screenshots show the user interface in Italian.
   <em>plugin toolbar</em>
 </p>
 
-immagine da sostituire con una aggiornata dopo la riorganizzazione di toolbar e menu.
-In Italiano le voci saranno: Imposta il layer SensorThings, Ispeziona gli elementi del layer, Esporta il layer.
+<br>
 
 To test the plugin, the following endpoints can be used:
 
