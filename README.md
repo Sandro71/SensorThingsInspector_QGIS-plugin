@@ -7,9 +7,10 @@ The plugin enables QGIS (www.qgis.org, versions 3.384 onwards) to inspect time-s
 This readme is a brief walkthrough on how to install and use the plugin in QGIS.
 1.	Installation<br>The plugin can be downloaded from this repository as a zip file.<br>Once installed (as a local zip file), the user interface shows a simple menu and a toolbar with four commands:
 
-    - Setup Upload 'SensorThings API' layer from remote server
-    - Inspect Show location informationfeatures in layer
+    - Setup 'SensorThings' layer
+    - Inspect features in layer
     - Export layer
+
 Note: the following screenshots show the user interface in Italian.
   
 immagine da sostituire con una aggiornata dopo la riorganizzazione di toolbar e menu.
