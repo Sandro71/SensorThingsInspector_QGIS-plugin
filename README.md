@@ -14,7 +14,19 @@ The plugin can be downloaded from this repository as a zip file.<br>Once install
 - Export layer
 
 Note: the following screenshots show the user interface in Italian.
-  
+
+<p>
+  <img width="200" src="https://github.com/user-attachments/assets/51e59d1f-5599-4c0e-90f9-49654107ff4c" />
+  <br>
+  <em>plugin menu</em>
+</p>
+
+<p>
+  <img width="200" src="https://github.com/user-attachments/assets/4b8a5140-cc5b-4eb9-8329-35639ec5964c" />
+  <br>
+  <em>plugin toolbar</em>
+</p>
+
 immagine da sostituire con una aggiornata dopo la riorganizzazione di toolbar e menu.
 In Italiano le voci saranno: Imposta il layer SensorThings, Ispeziona gli elementi del layer, Esporta il layer.
 
