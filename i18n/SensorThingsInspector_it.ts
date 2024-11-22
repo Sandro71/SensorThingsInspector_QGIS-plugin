@@ -151,7 +151,7 @@
     <message>
         <location filename="../sensor_things_inspector.py" line="290"/>
         <source>Selected entity has an illegal data source</source>
-        <translation type="unfinished">utilizzare un vettore di tipo &apos;SensorThing&apos;</translation>
+        <translation>utilizzare un vettore di tipo &apos;SensorThing&apos;</translation>
     </message>
     <message>
         <location filename="../sensor_things_inspector.py" line="213"/>
@@ -224,7 +224,7 @@
     <message>
         <location filename="../sensor_things_location_dlg.py" line="178"/>
         <source>Datastream</source>
-        <translation type="unfinished"></translation>
+        <translation>Flusso di dati</translation>
     </message>
     <message>
         <location filename="../sensor_things_location_dlg.py" line="180"/>
@@ -234,7 +234,7 @@
     <message>
         <location filename="../sensor_things_location_dlg.py" line="182"/>
         <source>Feature Of Interest</source>
-        <translation type="unfinished"></translation>
+        <translation>Elemento di Interesse</translation>
     </message>
 </context>
 <context>
