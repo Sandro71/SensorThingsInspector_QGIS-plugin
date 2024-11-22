@@ -30,7 +30,7 @@ import os
 import re
 
 from PyQt5.QtCore import Qt, QEvent, QMetaType, QTimer
-from PyQt5.QtWidgets import QDockWidget, QDialogButtonBox
+from PyQt5.QtWidgets import QDockWidget
 
 from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
@@ -172,7 +172,23 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
         
     def onNewSource(self):
         """On new source clicked"""
-        self.stackedWdSource.setCurrentIndex(0)   
+        #self.stackedWdSource.setCurrentIndex(0)
+        
+        layer = self.getLayer()
+        if layer is None:
+            return 
+        
+        if self.source_widget.sourceUri() is None:
+            return
+        
+        new_source = self.source_widget.sourceUri()
+        
+        new_filter = '' if self.sql_editor is None else self.sql_editor.text()
+  
+        new_layer = self.addVectorLayer(new_source, layer.name(), layer.providerType())
+        
+        new_layer.setSubsetString( new_filter )
+        
         
     def onSourceApply(self):
         """Apply layer source changes"""
@@ -233,7 +249,7 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
         
         layer = QgsVectorLayer( vectorLayerPath, layerName, providerKey, options=opts )
         
-        QgsProject.instance().addMapLayer( layer, True )
+        return QgsProject.instance().addMapLayer( layer, True )
      
     
   
@@ -477,11 +493,12 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
             
             self.pnlSourceWidget.layout().insertWidget(0, self.source_widget)
             
+            """
             if buttonBox is not None:
                 back_button = buttonBox.addButton(self.tr("Back"), QDialogButtonBox.ApplyRole)
                 back_button.setStyleSheet("font: bold;")
                 back_button.clicked.connect(lambda checked, self=self: self.stackedWdSource.setCurrentIndex(1))
-    
+            """
             
             if self.sql_editor is None:
                 self.sql_editor = QgsCodeEditorSQL()
