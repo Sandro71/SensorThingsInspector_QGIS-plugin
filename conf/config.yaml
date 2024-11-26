@@ -36,7 +36,17 @@ chart:
 ## analysis settings
 analysis:
     observerd_properties_by_features: false
-             
+  
+## Inspector settings
+inspector:
+    limits:
+        featureLimit: 100
+        thingLimit: 100
+        foiObservationLimit: 10
+        foiDatastreamLimit: 10
+        datastreamLimit: 100
+        observationLimit: 1000
+
 ## CSV export settings
 export:
    add_to_map: true

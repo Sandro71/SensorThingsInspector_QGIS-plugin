@@ -287,7 +287,7 @@ class SensorThingLayerUtils:
     
     
     @staticmethod
-    def createDataSourceUri(ds_uri: QgsDataSourceUri, url: str, entity: str, featureLimit: int=10000, expandTo: str=None, sql: str=None) -> QgsDataSourceUri:
+    def createDataSourceUri(ds_uri: QgsDataSourceUri, url: str, entity: str, featureLimit: int=1000, expandTo: str=None, sql: str=None) -> QgsDataSourceUri:
         """Create a copy of a Data Source Uri specific for SensorThings provider"""
         
         # Set Uie Authentication parameters

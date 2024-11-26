@@ -65,6 +65,8 @@ $(document).ready(function() {
 					return;
 				}
                 
+                var dsLimit = pyjsapi.getLimit('datastreamLimit')
+                
                 var expandTo = isMultidataStream ? 'MultiDatastream' : 'Datastream';
                 
                 var prefix_attribs = isMultidataStream ? 'MultiDatastream_' : 'Datastream_';
@@ -72,7 +74,7 @@ $(document).ready(function() {
                 var entFilter = "id eq " + quote(thingData['@iot.id']);
 				
 				// create main promise to get data
-                requestPromise(url, 'Thing', 1000, expandTo, entFilter, prefix_attribs)
+                requestPromise(url, 'Thing', pyjsapi.getLimit('featureLimit'), expandTo+':Limit='+dsLimit, entFilter, prefix_attribs)
 					.then(d => { 
 						// create a promise chain to obtain
 						// sensor and observerd property data
@@ -89,7 +91,7 @@ $(document).ready(function() {
 							// sensor promise
                             entFilter = "id eq " + quote(row['@iot.id']);
                         
-							var _prom = requestPromise(url, expandTo, 1000, 'Sensor', entFilter, 'Sensor_')
+							var _prom = requestPromise(url, expandTo, pyjsapi.getLimit('featureLimit'), 'Sensor', entFilter, 'Sensor_')
 								.then(data => { 
 									row['sensorData'] = data.length > 0 ? data[0] : { name: '???' };
 								})
@@ -101,7 +103,7 @@ $(document).ready(function() {
 							promises.push(_prom);
 							
 							// observed property promise
-                            _prom = requestPromise(url, expandTo, 1000, 'ObservedProperty', entFilter, 'ObservedProperty_')
+                            _prom = requestPromise(url, expandTo, pyjsapi.getLimit('featureLimit'), 'ObservedProperty', entFilter, 'ObservedProperty_')
 								.then(data => { 
                                     if (isMultidataStream) {
                                         row['observedProperty'] = data;   
@@ -140,7 +142,7 @@ $(document).ready(function() {
                                     // create promise
                                     entFilter = "id eq " + quote(aggregateData.id);
                                     
-                                    _prom = requestPromise(url, aggregateData.entity, 1000, null, entFilter, null)
+                                    _prom = requestPromise(url, aggregateData.entity, pyjsapi.getLimit('featureLimit'), null, entFilter, null)
                                         .then(data => { 
                                             data = data.length > 0 ? data[0] : {}
                                             
@@ -264,7 +266,7 @@ $(document).ready(function() {
 
 				// show Observations data
     			pyjsapi.loadObservationsData(rowData, {
-					"queryParams": dtFilterRange.getQueryParams(1000),
+					"queryParams": dtFilterRange.getQueryParams(pyjsapi.getLimit('observationLimit')),
 					"filterTime": dtFilterRange.toString(),
 					"isMultidatastream": isMultidataStream
 				});

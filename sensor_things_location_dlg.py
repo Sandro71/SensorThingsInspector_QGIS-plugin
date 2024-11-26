@@ -182,9 +182,11 @@ class SensorThingsLocationDialog(QtWidgets.QDialog):
                 self.setWindowTitle(self.tr("Feature Of Interest"))
             
             # Request location data
+            featureLimit = self.getLimit('featureLimit')
+            
             url = SensorThingLayerUtils.getUrl(layer)
             
-            self._st_load_task = self.getRequest(url=url, entity=sta_entity, featureLimit=1000, expandTo=None, sql="id eq {}".format(SensorThingLayerUtils.quoteValue(location_id)), prefix_attribs=None)
+            self._st_load_task = self.getRequest(url=url, entity=sta_entity, featureLimit=featureLimit, expandTo=None, sql="id eq {}".format(SensorThingLayerUtils.quoteValue(location_id)), prefix_attribs=None)
             self._st_load_task.dataLoaded.connect(self._location_callback)
             self._st_load_task.get()
             
@@ -293,14 +295,22 @@ class SensorThingsLocationDialog(QtWidgets.QDialog):
             self.page_data['location']['url'] = load_task.getUrl()
             
             # Request things data
+            featureLimit = self.getLimit('featureLimit')
+            thingLimit = self.getLimit('thingLimit')
+            
             if sta_entity == 'Location':
-                self._st_load_task = self.getRequest(url=load_task.getUrl(), entity='Location', featureLimit=1000, expandTo='Thing', sql=load_task.getFilter(), prefix_attribs='Thing_')
+                expandTo = "Thing:limit={}".format(thingLimit)
+                self._st_load_task = self.getRequest(url=load_task.getUrl(), entity='Location', featureLimit=featureLimit, expandTo=expandTo, sql=load_task.getFilter(), prefix_attribs='Thing_')
             
             elif sta_entity == 'FeatureOfInterest':
-                self._st_load_task = self.getRequest(url=load_task.getUrl(), entity='FeatureOfInterest', featureLimit=1000, expandTo='Observation:limit=1;Datastream;Thing', sql=load_task.getFilter(), prefix_attribs='Observation_Datastream_Thing_')
+                foiObservationLimit = self.getLimit('foiObservationLimit')
+                foiDatastreamLimit = self.getLimit('foiDatastreamLimit')
+                expandTo = "Observation:limit={};Datastream:limit={};Thing:limit={}".format(foiObservationLimit, foiDatastreamLimit, thingLimit)
+                
+                self._st_load_task = self.getRequest(url=load_task.getUrl(), entity='FeatureOfInterest', featureLimit=featureLimit, expandTo=expandTo, sql=load_task.getFilter(), prefix_attribs='Observation_Datastream_Thing_')
             
             elif sta_entity == 'Datastream' or sta_entity == 'MultiDatastream':
-                self._st_load_task = self.getRequest(url=load_task.getUrl(), entity=sta_entity, featureLimit=1000, expandTo='Thing', sql=load_task.getFilter(), prefix_attribs='Thing_')
+                self._st_load_task = self.getRequest(url=load_task.getUrl(), entity=sta_entity, featureLimit=featureLimit, expandTo=expandTo, sql=load_task.getFilter(), prefix_attribs='Thing_')
             
             else:
                 raise ValueError("{}: {}".format(self.tr("Invalid SensorThings entity"), sta_entity))
@@ -424,6 +434,10 @@ class SensorThingsLocationDialog(QtWidgets.QDialog):
         except Exception as ex:
             self.logError(str(ex))
             return {}
+    
+    @pyqtSlot(str, result=int)
+    def getLimit(self, name):
+        return self.plugin.main_panel.getLimit(name)
     
     @pyqtSlot(str, str, int, str, str, str, result=QVariant)
     def getRequest(self, url, entity, featureLimit, expandTo, sql, prefix_attribs):

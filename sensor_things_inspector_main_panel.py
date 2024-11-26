@@ -30,7 +30,7 @@ import os
 import re
 
 from PyQt5.QtCore import Qt, QEvent, QMetaType, QTimer
-from PyQt5.QtWidgets import QDockWidget
+from PyQt5.QtWidgets import QDockWidget, QAbstractItemView
 
 from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
@@ -43,11 +43,12 @@ from qgis.gui import (QgsGui,
 
 from qgis.utils import iface
 
-from SensorThingsInspector import __QGIS_PLUGIN_NAME__
+from SensorThingsInspector import __QGIS_PLUGIN_NAME__, plgConfig
 from SensorThingsInspector.log.logger import QgisLogger as logger
 from SensorThingsInspector.utils.widget import QtWidgetUtils 
 from SensorThingsInspector.utils.layer_utils import LayerUtils 
 from SensorThingsInspector.sensor_things_inspector_layer import __SENSORTHINGS_PROVIDER_NAME__, SensorThingLayerUtils
+from SensorThingsInspector.sensor_things_inspector_model import InspectorLimitModel, LimitDelegate
 
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -70,6 +71,8 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
         self.st_temporal_settings_widget = None
         
         self.temporal_needs_resync = False
+        
+        self.inspect_limits_model = None
         
         # Set up the user interface from Designer through FORM_CLASS.
         # After self.setupUi() you can access any designer object by doing
@@ -104,6 +107,8 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
         self.btnQueryBuilder.setText(self.tr("Query Builder"))
         
         self.gbxSourceFilter.setTitle(self.tr("Filter"))
+        
+        self.btnProvider.clicked.connect(self.onSourceProvider)
         
         self.btnSourceNew.clicked.connect(self.onNewSource)
         
@@ -141,9 +146,26 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
         #####################################################################
         # Tab Inspector
         
-        #self.tabControl.setTabVisible(self.tabControl.indexOf(self.tabInspector), False)
+        self.inspect_limits_model = InspectorLimitModel()
         
+        cfg_limits = plgConfig.get_value('inspector/limits',{})
         
+        self.inspect_limits_model.setLimit('featureLimit',        cfg_limits.get('featureLimit'))
+        self.inspect_limits_model.setLimit('thingLimit',          cfg_limits.get('thingLimit'))
+        self.inspect_limits_model.setLimit('foiObservationLimit', cfg_limits.get('foiObservationLimit'))
+        self.inspect_limits_model.setLimit('foiDatastreamLimit',  cfg_limits.get('foiDatastreamLimit'))
+        self.inspect_limits_model.setLimit('datastreamLimit',     cfg_limits.get('datastreamLimit'))
+        self.inspect_limits_model.setLimit('observationLimit',    cfg_limits.get('observationLimit'))
+        
+        self.tvwInspectorLimits.setModel(self.inspect_limits_model)
+        
+        self.tvwInspectorLimits.verticalHeader().hide()
+        
+        self.tvwInspectorLimits.horizontalHeader().setStretchLastSection(True)
+        
+        self.tvwInspectorLimits.setEditTriggers(QAbstractItemView.AllEditTriggers)
+        
+        self.tvwInspectorLimits.setItemDelegateForColumn(1, LimitDelegate(self))
         
         #####################################################################
         # Start
@@ -169,6 +191,10 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
     def onRenderComplete(self,  painter):
         """On Map Canvas render complete"""
         logger.restoreOverrideCursor()
+        
+    def onSourceProvider(self):
+        """On provider source"""
+        self.stackedWdSource.setCurrentIndex(0)
         
     def onNewSource(self):
         """On new source clicked"""
@@ -327,6 +353,9 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
         
         self.st_temporal_settings_widget.syncToLayer()
     
+    def getLimit(self, name):
+        """Get a named limit value for inspector queries"""
+        return self.inspect_limits_model.getLimit(name)
      
     def getLayerInitSetting(self):
         """Return layer panel initial settings"""
@@ -493,12 +522,11 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
             
             self.pnlSourceWidget.layout().insertWidget(0, self.source_widget)
             
-            """
             if buttonBox is not None:
-                back_button = buttonBox.addButton(self.tr("Back"), QDialogButtonBox.ApplyRole)
+                back_button = buttonBox.addButton(self.tr("Back"), QtWidgets.QDialogButtonBox.ApplyRole)
                 back_button.setStyleSheet("font: bold;")
                 back_button.clicked.connect(lambda checked, self=self: self.stackedWdSource.setCurrentIndex(1))
-            """
+            
             
             if self.sql_editor is None:
                 self.sql_editor = QgsCodeEditorSQL()

@@ -439,7 +439,7 @@ $(document).ready(function() {
             
             var entFilter = "id eq " + quote(propData['@iot.id']);
                         
-            requestPromise(url, entity, 1000, expandTo, entFilter, prefix_attribs)
+            requestPromise(url, entity, pyjsapi.getLimit('featureLimit'), expandTo, entFilter, prefix_attribs)
 				.then(d => { 
                     
                     var rows = d || [];
@@ -564,7 +564,7 @@ $(document).ready(function() {
 		var dtStart = correctDatePickerDate($("#datePickerStart"));
 		var dtEnd = correctDatePickerDate( $("#datePickerEnd"));
 		var dateRange = new SensorThingsDateRange().getFilterRange(dtStart, dtEnd);
-		pageData['queryParams'] = dateRange.getQueryParams(1000);
+		pageData['queryParams'] = dateRange.getQueryParams(pyjsapi.getLimit('observationLimit'));
 		
 		// clear and reload data
 		var table = $('#valori').DataTable();
@@ -581,7 +581,7 @@ $(document).ready(function() {
 		var dtStart = correctDatePickerDate($("#datePickerStart"));
 		var dtEnd = correctDatePickerDate( $("#datePickerEnd"));
 		var dateRange = new SensorThingsDateRange().getFilterRange(dtStart, dtEnd);
-		var queryParams = dateRange.getQueryParams(1000);
+		var queryParams = dateRange.getQueryParams(pyjsapi.getLimit('observationLimit'));
         
 		// compose file name
 		var propName = propData['name'] || 'Osservazioni';

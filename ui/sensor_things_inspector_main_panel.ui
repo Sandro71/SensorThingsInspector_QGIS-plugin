@@ -77,7 +77,7 @@
         <item>
          <widget class="QStackedWidget" name="stackedWdSource">
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="pageSourceSelection">
            <property name="sizePolicy">
@@ -228,11 +228,11 @@
               </layout>
              </widget>
             </item>
-            <item alignment="Qt::AlignRight">
+            <item>
              <widget class="QFrame" name="horizontalFrame">
               <layout class="QHBoxLayout" name="horizontalLayout">
                <property name="leftMargin">
-                <number>0</number>
+                <number>10</number>
                </property>
                <property name="topMargin">
                 <number>0</number>
@@ -243,6 +243,26 @@
                <property name="bottomMargin">
                 <number>10</number>
                </property>
+               <item>
+                <widget class="QPushButton" name="btnProvider">
+                 <property name="text">
+                  <string>Provider</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
                <item>
                 <widget class="QPushButton" name="btnSourceNew">
                  <property name="font">
@@ -528,17 +548,7 @@
             <number>0</number>
            </property>
            <item>
-            <spacer name="verticalSpacer">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
+            <widget class="QTableView" name="tvwInspectorLimits"/>
            </item>
           </layout>
          </widget>

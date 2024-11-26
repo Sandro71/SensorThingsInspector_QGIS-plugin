@@ -264,6 +264,9 @@ class SensorThingsObservationDialog(QtWidgets.QDialog):
         """Injected method to get page data"""
         return self.page_data
     
+    @pyqtSlot(str, result=int)
+    def getLimit(self, name):
+        return self.plugin.main_panel.getLimit(name)
     
     @pyqtSlot(str, str, int, str, str, str, result=QVariant)
     def getRequest(self, url, entity, featureLimit, expandTo, sql, prefix_attribs):
@@ -302,7 +305,7 @@ class SensorThingsObservationDialog(QtWidgets.QDialog):
             self._st_load_task = self.getRequest(
                 url= url, 
                 entity= options.get('query_entity'),
-                featureLimit= options.get('query_featureLimit', 10000), 
+                featureLimit= options.get('query_featureLimit', self.getLimit('observationLimit')), 
                 expandTo= options.get('query_expandTo'),  
                 sql= options.get('query_filter', "id eq ''"), 
                 prefix_attribs= options.get('query_prefix_attribs', 'Observation_')
