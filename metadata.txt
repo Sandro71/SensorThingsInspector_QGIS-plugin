@@ -3,7 +3,7 @@
 # This file should be included when you package your plugin.# Mandatory items:
 
 [general]
-name=Sensor Things Inspector
+name=Sensor Things Inspector 
 qgisMinimumVersion=3.37
 description=The plugin enables QGIS software (www.qgis.org) to access dynamic data from sensors, using SensorThingsInspector protocol (https://www.ogc.org/standards/sensorthings)
 version=1.1.2
