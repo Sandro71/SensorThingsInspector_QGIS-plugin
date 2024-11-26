@@ -117,6 +117,9 @@ class SensorThingsLocationDialog(QtWidgets.QDialog):
             if not feature:
                 return
             
+            # select feature
+            layer.selectByIds([self._feat_id])
+            
             # get feature location attribute
             location_id = SensorThingLayerUtils.getFeatureAttribute(feature, "id")
             location_name = SensorThingLayerUtils.getFeatureAttribute(feature, "name")
@@ -132,9 +135,9 @@ class SensorThingsLocationDialog(QtWidgets.QDialog):
                 if feat:
                     feats_info.append({
                         'fid': fid,
-                        'locId': location_id,
-                        'locName': location_name,
-                        'lodDesc': location_desc
+                        'locId': SensorThingLayerUtils.getFeatureAttribute(feature, "id"),
+                        'locName': SensorThingLayerUtils.getFeatureAttribute(feature, "name"),
+                        'lodDesc': SensorThingLayerUtils.getFeatureAttribute(feature, "description")
                     })
                     
             # hide Osservazioni dialog
