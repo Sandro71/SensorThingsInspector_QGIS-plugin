@@ -29,7 +29,7 @@ from SensorThingsInspector.log.logger import QgisLogger as logger
 from SensorThingsInspector.utils.layer_utils import LayerUtils 
 from SensorThingsInspector.sensor_things_inspector_layer import __SENSORTHINGS_PROVIDER_NAME__
 from SensorThingsInspector.sensor_things_inspector_main_panel import SensorThingsInspectorMainPanel
-from SensorThingsInspector.feature_selection_tool import FeatureSelectionTool
+from SensorThingsInspector.tools.feature_selection_tool import FeatureSelectionTool
 from SensorThingsInspector.sensor_things_location_dlg import SensorThingsLocationDialog
 
 # import system modules

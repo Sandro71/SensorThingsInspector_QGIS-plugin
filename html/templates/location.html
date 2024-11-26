@@ -77,7 +77,7 @@
   <select class="custom-select loc-select" id="location-selector">
   {% for feat in features %}
   <option value="{{ feat.fid }}"
-  	{% if feat.fid == feature.fid %} selected{% endif %}>{{ feat.locName|sn|e }}</option>
+  	{% if feat.fid == feature.fid %} selected{% endif %}>{{ feat.locName|sn|e }} (fid: {{ feat.fid }})</option>
   {% endfor %}
   </select>
   {% endif %}
