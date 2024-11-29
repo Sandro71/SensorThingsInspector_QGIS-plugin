@@ -24,7 +24,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Step 1 - Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       
       - name: Step 2 - Set variables
         run: |
@@ -37,7 +37,7 @@ jobs:
           rsync -r ./. /tmp/SensorThingsInspector/SensorThingsInspector --exclude .git --exclude .github
           
       - name: Step 4 - Archive code coverage results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: SensorThingsInspector-${{ env.PLUGIN_VERSION }}
           path: /tmp/SensorThingsInspector
