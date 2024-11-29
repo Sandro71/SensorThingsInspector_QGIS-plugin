@@ -127,7 +127,9 @@ dmypy.json
 
 # -- CUSTOM ----
 *.zip
-*.qm
+*.bat
+*.ts
+*.pro
 .vscode/
 /.settings
 /.project
