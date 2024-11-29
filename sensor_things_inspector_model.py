@@ -88,8 +88,14 @@ class InspectorLimitModel(QAbstractTableModel):
         if orientation == Qt.Horizontal:
             # column header text
             if role == Qt.DisplayRole:
-                rec = self._data[0]
-                return list(rec.keys())[col]
+                if col == 0:
+                    return self.tr("Name")
+                elif col == 1:
+                    return self.tr("Value")
+                elif col == 2:
+                    return self.tr("Description")
+                else:
+                    return ''
 
     def data(self, index, role):
         if role == Qt.DisplayRole:

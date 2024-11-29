@@ -2,6 +2,54 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="it">
 <context>
+    <name>InspectorLimitModel</name>
+    <message>
+        <location filename="../sensor_things_inspector_model.py" line="35"/>
+        <source>Max number of entity returned</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../sensor_things_inspector_model.py" line="36"/>
+        <source>Max number of Things returned</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../sensor_things_inspector_model.py" line="37"/>
+        <source>Max number of Observations returned for FOI research</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../sensor_things_inspector_model.py" line="38"/>
+        <source>Max number of Datastream returned for FOI research</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../sensor_things_inspector_model.py" line="39"/>
+        <source>Max number of Datastreams/MultiDatastreams returned</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../sensor_things_inspector_model.py" line="40"/>
+        <source>Max number of Observations returned</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../sensor_things_inspector_model.py" line="92"/>
+        <source>Name</source>
+        <translation>Nome</translation>
+    </message>
+    <message>
+        <location filename="../sensor_things_inspector_model.py" line="94"/>
+        <source>Value</source>
+        <translation>Valore</translation>
+    </message>
+    <message>
+        <location filename="../sensor_things_inspector_model.py" line="96"/>
+        <source>Description</source>
+        <translation>Descrizione</translation>
+    </message>
+</context>
+<context>
     <name>LayerUtils</name>
     <message>
         <location filename="../utils/layer_utils.py" line="142"/>
@@ -66,74 +114,79 @@
 <context>
     <name>SensorThingsInspectorMainPanel</name>
     <message>
-        <location filename="../sensor_things_inspector_main_panel.py" line="570"/>
+        <location filename="../sensor_things_inspector_main_panel.py" line="624"/>
         <source>Select a SensorThings layer</source>
         <translation>Selezionare un layer SensorThings</translation>
     </message>
     <message>
-        <location filename="../sensor_things_inspector_main_panel.py" line="591"/>
+        <location filename="../sensor_things_inspector_main_panel.py" line="654"/>
         <source>Layer without geometries</source>
         <translation>Layer senza geometrie</translation>
     </message>
     <message>
-        <location filename="../sensor_things_inspector_main_panel.py" line="545"/>
+        <location filename="../sensor_things_inspector_main_panel.py" line="599"/>
         <source>Cannot create style widget:</source>
         <translation>Impossibile creare il componente di stile:</translation>
     </message>
     <message>
-        <location filename="../sensor_things_inspector_main_panel.py" line="85"/>
+        <location filename="../sensor_things_inspector_main_panel.py" line="88"/>
         <source>Source</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../sensor_things_inspector_main_panel.py" line="86"/>
+        <location filename="../sensor_things_inspector_main_panel.py" line="89"/>
         <source>Symbology</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../sensor_things_inspector_main_panel.py" line="87"/>
+        <location filename="../sensor_things_inspector_main_panel.py" line="90"/>
         <source>Temporal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../sensor_things_inspector_main_panel.py" line="88"/>
+        <location filename="../sensor_things_inspector_main_panel.py" line="91"/>
         <source>Inspector</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../sensor_things_inspector_main_panel.py" line="100"/>
+        <location filename="../sensor_things_inspector_main_panel.py" line="103"/>
         <source>New</source>
         <translation>Nuovo</translation>
     </message>
     <message>
-        <location filename="../sensor_things_inspector_main_panel.py" line="135"/>
+        <location filename="../sensor_things_inspector_main_panel.py" line="140"/>
         <source>Apply</source>
         <translation>Applica</translation>
     </message>
     <message>
-        <location filename="../sensor_things_inspector_main_panel.py" line="104"/>
+        <location filename="../sensor_things_inspector_main_panel.py" line="107"/>
         <source>Query Builder</source>
         <translation>Crea Interrogazioni</translation>
     </message>
     <message>
-        <location filename="../sensor_things_inspector_main_panel.py" line="106"/>
+        <location filename="../sensor_things_inspector_main_panel.py" line="109"/>
         <source>Filter</source>
         <translation>Filtro</translation>
     </message>
     <message>
-        <location filename="../sensor_things_inspector_main_panel.py" line="119"/>
+        <location filename="../sensor_things_inspector_main_panel.py" line="124"/>
         <source>Reload</source>
         <translation>Ricarica</translation>
     </message>
     <message>
-        <location filename="../sensor_things_inspector_main_panel.py" line="481"/>
+        <location filename="../sensor_things_inspector_main_panel.py" line="526"/>
         <source>Back</source>
         <translation>Indietro</translation>
     </message>
     <message>
-        <location filename="../sensor_things_inspector_main_panel.py" line="586"/>
+        <location filename="../sensor_things_inspector_main_panel.py" line="648"/>
         <source>No temporal fields</source>
         <translation>Nessun campo temporale</translation>
+    </message>
+    <message>
+        <location filename="../sensor_things_inspector_main_panel.py" line="631"/>
+        <source>Unavailable layer</source>
+        <translation>Layer non disponibile</translation>
     </message>
 </context>
 <context>
@@ -177,62 +230,62 @@
 <context>
     <name>SensorThingsLocationDialog</name>
     <message>
-        <location filename="../sensor_things_location_dlg.py" line="176"/>
+        <location filename="../sensor_things_location_dlg.py" line="179"/>
         <source>Location</source>
         <translation>Posizione</translation>
     </message>
     <message>
-        <location filename="../sensor_things_location_dlg.py" line="151"/>
+        <location filename="../sensor_things_location_dlg.py" line="154"/>
         <source>Invalid layer URL</source>
         <translation>URL invalida per il layer</translation>
     </message>
     <message>
-        <location filename="../sensor_things_location_dlg.py" line="356"/>
+        <location filename="../sensor_things_location_dlg.py" line="369"/>
         <source>Location dialog visualization</source>
         <translation>Visualizzazione dialogo Posizione</translation>
     </message>
     <message>
-        <location filename="../sensor_things_location_dlg.py" line="421"/>
+        <location filename="../sensor_things_location_dlg.py" line="434"/>
         <source>Invalid Thing ID</source>
         <translation>Thing ID invalido</translation>
     </message>
     <message>
-        <location filename="../sensor_things_location_dlg.py" line="478"/>
+        <location filename="../sensor_things_location_dlg.py" line="495"/>
         <source>Loading Observations data</source>
         <translation>Caricamento dati Osservazioni</translation>
     </message>
     <message>
-        <location filename="../sensor_things_location_dlg.py" line="306"/>
+        <location filename="../sensor_things_location_dlg.py" line="319"/>
         <source>Invalid SensorThings entity</source>
         <translation>Entità SensorThings invalida</translation>
     </message>
     <message>
-        <location filename="../sensor_things_location_dlg.py" line="324"/>
+        <location filename="../sensor_things_location_dlg.py" line="337"/>
         <source>Entity dialog visualization</source>
         <translation>Finestra di ispezione entità SensorThings</translation>
     </message>
     <message>
-        <location filename="../sensor_things_location_dlg.py" line="289"/>
+        <location filename="../sensor_things_location_dlg.py" line="294"/>
         <source>Area observed by</source>
         <translation>Area osservata da</translation>
     </message>
     <message>
-        <location filename="../sensor_things_location_dlg.py" line="350"/>
+        <location filename="../sensor_things_location_dlg.py" line="363"/>
         <source>No description</source>
         <translation>Nessuna descrizione</translation>
     </message>
     <message>
-        <location filename="../sensor_things_location_dlg.py" line="178"/>
+        <location filename="../sensor_things_location_dlg.py" line="181"/>
         <source>Datastream</source>
         <translation>Flusso di dati</translation>
     </message>
     <message>
-        <location filename="../sensor_things_location_dlg.py" line="180"/>
+        <location filename="../sensor_things_location_dlg.py" line="183"/>
         <source>MultiDatastream</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../sensor_things_location_dlg.py" line="182"/>
+        <location filename="../sensor_things_location_dlg.py" line="185"/>
         <source>Feature Of Interest</source>
         <translation>Elemento di Interesse</translation>
     </message>

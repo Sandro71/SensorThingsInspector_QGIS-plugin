@@ -9,7 +9,8 @@ SOURCES = ../log/logger.py \
 		  ../sensor_things_inspector_main_panel.py \
           ../sensor_things_browser.py \
           ../sensor_things_location_dlg.py \
-          ../sensor_things_osservazioni_dlg.py
+          ../sensor_things_osservazioni_dlg.py \
+		  ../sensor_things_inspector_model.py
 		  
           
 TRANSLATIONS = SensorThingsInspector_it.ts

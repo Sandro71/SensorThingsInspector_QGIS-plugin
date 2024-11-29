@@ -321,6 +321,9 @@
         <item>
          <widget class="QFrame" name="pnlStyle">
           <layout class="QVBoxLayout" name="verticalLayout_11">
+           <property name="spacing">
+            <number>0</number>
+           </property>
            <property name="leftMargin">
             <number>0</number>
            </property>
@@ -446,47 +449,10 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QWidget" name="pnlAnSpatialWidget" native="true">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>20</height>
-           </size>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout_13">
-           <item>
-            <widget class="QLabel" name="lblNoTemporal">
-             <property name="font">
-              <font>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>No Temporal data</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-             <property name="margin">
-              <number>6</number>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item alignment="Qt::AlignRight">
-         <widget class="QFrame" name="horizontalFrame">
-          <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <widget class="QFrame" name="pnlAnalysis">
+          <layout class="QVBoxLayout" name="verticalLayout_18">
            <property name="spacing">
-            <number>7</number>
+            <number>0</number>
            </property>
            <property name="leftMargin">
             <number>0</number>
@@ -495,22 +461,74 @@
             <number>0</number>
            </property>
            <property name="rightMargin">
-            <number>10</number>
+            <number>0</number>
            </property>
            <property name="bottomMargin">
-            <number>10</number>
+            <number>0</number>
            </property>
-           <item alignment="Qt::AlignLeft">
-            <widget class="QPushButton" name="btnAnalysisApply">
-             <property name="font">
-              <font>
-               <weight>75</weight>
-               <bold>true</bold>
-              </font>
+           <item>
+            <widget class="QWidget" name="pnlAnSpatialWidget" native="true">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
-             <property name="text">
-              <string>Apply</string>
-             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_13">
+              <item>
+               <widget class="QLabel" name="lblNoTemporal">
+                <property name="font">
+                 <font>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>No Temporal data</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+                <property name="margin">
+                 <number>6</number>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item alignment="Qt::AlignRight">
+            <widget class="QFrame" name="horizontalFrame">
+             <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <property name="spacing">
+               <number>7</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>10</number>
+              </property>
+              <property name="bottomMargin">
+               <number>10</number>
+              </property>
+              <item alignment="Qt::AlignLeft">
+               <widget class="QPushButton" name="btnAnalysisApply">
+                <property name="font">
+                 <font>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Apply</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </item>
           </layout>

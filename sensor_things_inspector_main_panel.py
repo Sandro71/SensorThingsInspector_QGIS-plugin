@@ -337,6 +337,7 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
         """ """
         self.temporal_needs_resync = True       
             
+            
     def onRepaintRequested(self):
         """ """
         if self.temporal_needs_resync:
@@ -412,6 +413,8 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
                 
                 self.disconnectSignal(wd_layer.layerModified, self.onTemporalPropertiesChanged)
                 
+                self.disconnectSignal(wd_layer.isValidChanged, self.updatePanels)
+                
             self.st_layer_id = ''
       
             # set new layer instance
@@ -425,6 +428,8 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
                 layer.temporalProperties().changed.connect(self.onTemporalPropertiesChanged)
                 
                 layer.repaintRequested.connect(self.onRepaintRequested)
+                
+                layer.isValidChanged.connect(self.updatePanels)
                 
                 # populate settings dictionary
                 if self.st_layer_id not in self.layerSetting:
@@ -463,6 +468,9 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
         
         # Initialize Temporal tab
         self.updateTemporalPanel()
+        
+        # Initialize Inspector tab
+        self.updateInspectorPanel()
     
     
     def updateSourcePanel(self):
@@ -560,14 +568,23 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
             self.btnStyleApply.setEnabled(False)
             
             # Check if layer not none (if SensorThings layer)
-            if self.getLayer() is None:
+            layer = self.getLayer()
+            
+            if layer is None:
                 self.lblNoStyle.setText(self.tr("Select a SensorThings layer"))
                 self.lblNoStyle.setVisible(True)
                 self.pnlStyle.setEnabled(False)
                 return
             
+            # Check if Vector layer is valid
+            elif not layer.isValid():
+                self.lblNoStyle.setText(self.tr("Unavailable layer"))
+                self.lblNoStyle.setVisible(True)
+                self.pnlStyle.setEnabled(False)
+                return
+            
             # Check if Vector layer with geometries (no table)
-            elif self.getLayer().geometryType() == Qgis.GeometryType.Null:
+            elif layer.geometryType() == Qgis.GeometryType.Null:
                 self.lblNoStyle.setText(self.tr("Layer without geometries"))
                 self.lblNoStyle.setVisible(True)
                 self.pnlStyle.setEnabled(False)
@@ -579,7 +596,7 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
             # Add layer Renderer Dialog as sub widget
             style = QgsStyle.defaultStyle()
             
-            self.st_style_dialog = QgsRendererPropertiesDialog(self.getLayer(), style, True, None)
+            self.st_style_dialog = QgsRendererPropertiesDialog(layer, style, True, None)
             
             if self.st_style_dialog is not None:
                 self.st_style_dialog.widgetChanged.connect(self.onStyleWidgetChanged)
@@ -614,9 +631,17 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
             self.tabAnalysis.setEnabled(False)
             self.lblNoTemporal.setText(self.tr("Select a SensorThings layer"))
             self.lblNoTemporal.setVisible(True)
-            self.btnAnalysisApply.setEnabled(False)
+            self.pnlAnalysis.setEnabled(False)
             return
         
+        if not layer.isValid():
+            self.tabAnalysis.setEnabled(False)
+            self.lblNoTemporal.setText(self.tr("Unavailable layer"))
+            self.lblNoTemporal.setVisible(True)
+            self.pnlAnalysis.setEnabled(False)
+            return
+        
+        self.pnlAnalysis.setEnabled(True)
         self.tabAnalysis.setEnabled(True)
         
         # Check if layer with DateTime fields
@@ -630,13 +655,15 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
         if not hasDateTimeFields:
             self.lblNoTemporal.setText(self.tr("No temporal fields"))
             self.lblNoTemporal.setVisible(True)
-            self.btnAnalysisApply.setEnabled(False)
-  
+            self.pnlAnalysis.setEnabled(False)
+            return
+            
         elif layer.geometryType() == Qgis.GeometryType.Null:
             self.lblNoTemporal.setText(self.tr("Layer without geometries"))
             self.lblNoTemporal.setVisible(True)
-            self.btnAnalysisApply.setEnabled(False)
-  
+            self.pnlAnalysis.setEnabled(False)
+            return
+            
         else:
             self.st_temporal_settings_widget = QgsVectorLayerTemporalPropertiesWidget(None, layer)
             
@@ -646,6 +673,16 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
             
             self.btnAnalysisApply.setEnabled(True)
             
+    
+    def updateInspectorPanel(self):    
+        """Update Inspector panel"""
+        layer = self.getLayer()
+        
+        if layer is None or not layer.isValid():
+            self.tvwInspectorLimits.setEnabled(False)
+            return
+        
+        self.tvwInspectorLimits.setEnabled(True)
         
         
     
