@@ -306,9 +306,9 @@ class SensorThingsLocationDialog(QtWidgets.QDialog):
                 self._st_load_task = self.getRequest(url=load_task.getUrl(), entity='Location', featureLimit=featureLimit, expandTo=expandTo, sql=load_task.getFilter(), prefix_attribs='Thing_')
             
             elif sta_entity == 'FeatureOfInterest':
-                foiObservationLimit = self.getLimit('foiObservationLimit')
-                foiDatastreamLimit = self.getLimit('foiDatastreamLimit')
-                expandTo = "Observation:limit={};Datastream:limit={};Thing:limit={}".format(foiObservationLimit, foiDatastreamLimit, thingLimit)
+                observationLimit = self.getLimit('observationLimit')
+                datastreamLimit = self.getLimit('datastreamLimit')
+                expandTo = "Observation:limit={};Datastream:limit={};Thing:limit={}".format(observationLimit, datastreamLimit, thingLimit)
                 
                 self._st_load_task = self.getRequest(url=load_task.getUrl(), entity='FeatureOfInterest', featureLimit=featureLimit, expandTo=expandTo, sql=load_task.getFilter(), prefix_attribs='Observation_Datastream_Thing_')
             
@@ -317,18 +317,6 @@ class SensorThingsLocationDialog(QtWidgets.QDialog):
             
             else:
                 raise ValueError("{}: {}".format(self.tr("Invalid SensorThings entity"), sta_entity))
-            
-            """
-            https://frost.labservice.it/FROST-Server/v1.1/FeaturesOfInterest?$expand=Observations/Datastream/Thing
-            limit 1 on observation + sql id eq id_foi
-            
-            https://frost.labservice.it/FROST-Server/v1.1/Datastreams?$expand=Thing
-            sql id eq id_ds
-            
-            https://frost.labservice.it/FROST-Server/v1.1/MultiDatastreams?$expand=Thing
-            sql id eq id_m_ds
-            """
-            
             
             self._st_load_task.dataLoaded.connect(self._things_callback)
             self._st_load_task.get()

@@ -40,11 +40,11 @@ analysis:
 ## Inspector settings
 inspector:
     limits:
-        featureLimit: 100
         thingLimit: 100
-        foiObservationLimit: 10
-        foiDatastreamLimit: 10
-        datastreamLimit: 100
+        datastreamLimit: 10
+        observationLimit: 10
+        
+    observation_limits:
         observationLimit: 1000
 
 ## CSV export settings

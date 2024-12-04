@@ -266,7 +266,7 @@ class SensorThingsObservationDialog(QtWidgets.QDialog):
     
     @pyqtSlot(str, result=int)
     def getLimit(self, name):
-        return self.plugin.main_panel.getLimit(name)
+        return self.plugin.main_panel.getObservationLimit(name)
     
     @pyqtSlot(str, str, int, str, str, str, result=QVariant)
     def getRequest(self, url, entity, featureLimit, expandTo, sql, prefix_attribs):

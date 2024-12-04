@@ -74,7 +74,7 @@ $(document).ready(function() {
                 var entFilter = "id eq " + quote(thingData['@iot.id']);
 				
 				// create main promise to get data
-                requestPromise(url, 'Thing', pyjsapi.getLimit('featureLimit'), expandTo+':Limit='+dsLimit, entFilter, prefix_attribs)
+                requestPromise(url, 'Thing', pyjsapi.getLimit('featureLimit'), expandTo+':limit='+dsLimit, entFilter, prefix_attribs)
 					.then(d => { 
 						// create a promise chain to obtain
 						// sensor and observerd property data

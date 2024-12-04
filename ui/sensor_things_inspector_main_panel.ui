@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>526</width>
-    <height>508</height>
+    <height>537</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -49,7 +49,7 @@
 { background-color: rgb(121, 215, 255); }</string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="tabSource">
        <property name="sizePolicy">
@@ -542,6 +542,13 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_6">
         <item>
+         <widget class="QLabel" name="lblFirstLimitTable">
+          <property name="text">
+           <string>1st level inspector</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QFrame" name="pnlExport">
           <property name="minimumSize">
            <size>
@@ -570,6 +577,32 @@
            </item>
           </layout>
          </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="lblSecondLimitTable">
+          <property name="styleSheet">
+           <string notr="true">margin-top: 10</string>
+          </property>
+          <property name="text">
+           <string>2nd level inspector</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTableView" name="tvwObservationInspectorLimits"/>
+        </item>
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </widget>

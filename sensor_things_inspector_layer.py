@@ -285,6 +285,23 @@ class SensorThingLayerUtils:
         
         return provider_uri.param('url') or ''
     
+    @staticmethod
+    def getFeatureLimit(layer: QgsVectorLayer, default_value: int=10000) -> int:
+        """Returns layer feature limit"""
+        if layer is None:
+            return default_value
+        
+        provider = layer.dataProvider()
+        
+        provider_uri = provider.uri()
+    
+        feature_limit = provider_uri.param('featureLimit')
+    
+        try:
+            return int(feature_limit)
+        except ValueError:
+            return default_value
+    
     
     @staticmethod
     def createDataSourceUri(ds_uri: QgsDataSourceUri, url: str, entity: str, featureLimit: int=1000, expandTo: str=None, sql: str=None) -> QgsDataSourceUri:

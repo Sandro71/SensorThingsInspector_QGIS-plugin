@@ -73,6 +73,7 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
         self.temporal_needs_resync = False
         
         self.inspect_limits_model = None
+        self.inspect_observation_limits_model = None
         
         # Set up the user interface from Designer through FORM_CLASS.
         # After self.setupUi() you can access any designer object by doing
@@ -146,16 +147,30 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
         #####################################################################
         # Tab Inspector
         
-        self.inspect_limits_model = InspectorLimitModel()
+        self.lblFirstLimitTable.setText(self.tr("1st level inspector"))
+        
+        self.inspect_limits_model = InspectorLimitModel(
+            [{
+                'Name' : 'thingLimit',
+                'Value': 100,
+                'Description': '', #self.tr("Max number of Things returned"),
+                'DisplayName': self.tr("Things")
+            },{
+                'Name' : 'datastreamLimit',
+                'Value': 100,
+                'Description': '', #self.tr("Max number of Datastreams/MultiDatastreams returned"),
+                'DisplayName': self.tr("Datastreams / MultiDatastreams")
+            },{
+                'Name' : 'observationLimit',
+                'Value': 1000,
+                'Description': '', #self.tr("Max number of Observations returned"),
+                'DisplayName': self.tr("Observations")
+            }]);
         
         cfg_limits = plgConfig.get_value('inspector/limits',{})
-        
-        self.inspect_limits_model.setLimit('featureLimit',        cfg_limits.get('featureLimit'))
-        self.inspect_limits_model.setLimit('thingLimit',          cfg_limits.get('thingLimit'))
-        self.inspect_limits_model.setLimit('foiObservationLimit', cfg_limits.get('foiObservationLimit'))
-        self.inspect_limits_model.setLimit('foiDatastreamLimit',  cfg_limits.get('foiDatastreamLimit'))
-        self.inspect_limits_model.setLimit('datastreamLimit',     cfg_limits.get('datastreamLimit'))
-        self.inspect_limits_model.setLimit('observationLimit',    cfg_limits.get('observationLimit'))
+        self.inspect_limits_model.setLimit('thingLimit',       cfg_limits.get('thingLimit'))
+        self.inspect_limits_model.setLimit('datastreamLimit',  cfg_limits.get('datastreamLimit'))
+        self.inspect_limits_model.setLimit('observationLimit', cfg_limits.get('observationLimit'))
         
         self.tvwInspectorLimits.setModel(self.inspect_limits_model)
         
@@ -166,6 +181,39 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
         self.tvwInspectorLimits.setEditTriggers(QAbstractItemView.AllEditTriggers)
         
         self.tvwInspectorLimits.setItemDelegateForColumn(1, LimitDelegate(self))
+        
+        self.tvwInspectorLimits.setColumnWidth(0, 190)
+        
+        
+        ####
+        self.lblSecondLimitTable.setText(self.tr("2nd level inspector"))
+        
+        self.inspect_observation_limits_model = InspectorLimitModel(
+            [{
+                'Name' : 'observationLimit',
+                'Value': 1000,
+                'Description': '', #self.tr("Max number of Observations returned"),
+                'DisplayName': self.tr("Observations")
+            }]);
+        
+        cfg_limits = plgConfig.get_value('inspector/observation_limits',{})
+        self.inspect_observation_limits_model.setLimit('observationLimit', cfg_limits.get('observationLimit'))
+        
+        self.tvwObservationInspectorLimits.setModel(self.inspect_observation_limits_model)
+        
+        self.tvwObservationInspectorLimits.verticalHeader().hide()
+        
+        self.tvwObservationInspectorLimits.horizontalHeader().setStretchLastSection(True)
+        
+        self.tvwObservationInspectorLimits.setEditTriggers(QAbstractItemView.AllEditTriggers)
+        
+        self.tvwObservationInspectorLimits.setItemDelegateForColumn(1, LimitDelegate(self))
+        
+        self.tvwObservationInspectorLimits.setColumnWidth(0, 190)
+        
+        
+        
+        
         
         #####################################################################
         # Start
@@ -356,7 +404,14 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
     
     def getLimit(self, name):
         """Get a named limit value for inspector queries"""
+        if name == 'featureLimit':
+            return SensorThingLayerUtils.getFeatureLimit(self.getLayer())
         return self.inspect_limits_model.getLimit(name)
+     
+    def getObservationLimit(self, name):
+        """Get a named limit value for inspector queries (observation dialog)"""
+        return self.inspect_observation_limits_model.getLimit(name)
+    
      
     def getLayerInitSetting(self):
         """Return layer panel initial settings"""
@@ -657,13 +712,7 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
             self.lblNoTemporal.setVisible(True)
             self.pnlAnalysis.setEnabled(False)
             return
-            
-        elif layer.geometryType() == Qgis.GeometryType.Null:
-            self.lblNoTemporal.setText(self.tr("Layer without geometries"))
-            self.lblNoTemporal.setVisible(True)
-            self.pnlAnalysis.setEnabled(False)
-            return
-            
+        
         else:
             self.st_temporal_settings_widget = QgsVectorLayerTemporalPropertiesWidget(None, layer)
             

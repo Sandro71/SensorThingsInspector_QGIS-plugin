@@ -28,18 +28,23 @@ class LimitDelegate(QStyledItemDelegate):
 # 
 #-----------------------------------------------------------
 class InspectorLimitModel(QAbstractTableModel):
-    def __init__(self):
+    def __init__(self, data: list):
         super().__init__()
         
-        self._data = [
-            { 'Name': 'featureLimit',        'Value': 100,  'Description': self.tr("Max number of entity returned") },
-            { 'Name': 'thingLimit',          'Value': 100,  'Description': self.tr("Max number of Things returned") },
-            { 'Name': 'foiObservationLimit', 'Value': 10,   'Description': self.tr("Max number of Observations returned for FOI research") },
-            { 'Name': 'foiDatastreamLimit',  'Value': 10,   'Description': self.tr("Max number of Datastream returned for FOI research") },
-            { 'Name': 'datastreamLimit',     'Value': 100,  'Description': self.tr("Max number of Datastreams/MultiDatastreams returned") },
-            { 'Name': 'observationLimit',    'Value': 1000, 'Description': self.tr("Max number of Observations returned") },
-        ]
+        self._data = []
         
+        if isinstance(data, list):
+            for rec in data:
+                if isinstance(rec, dict) and 'Name' in rec:
+                    new_rec = {
+                        'Name' : rec.get('Name', '???'),
+                        'Value': rec.get('Value', 0),
+                        'Description': rec.get('Description', ''),
+                        'DisplayName': rec.get('DisplayName', ''),
+                    }
+                    
+                    self._data.append(new_rec)
+  
     def setLimit(self, name, value):
         if not name:
             return
@@ -72,7 +77,7 @@ class InspectorLimitModel(QAbstractTableModel):
     def columnCount(self, index):
         # The following takes the first sub-list, and returns
         # the length (only works if all rows are an equal length)
-        return len(self._data[0])
+        return 3
         
     def flags(self, index):
         if not index.isValid():
@@ -89,11 +94,11 @@ class InspectorLimitModel(QAbstractTableModel):
             # column header text
             if role == Qt.DisplayRole:
                 if col == 0:
-                    return self.tr("Name")
+                    return self.tr("Entity")
                 elif col == 1:
-                    return self.tr("Value")
-                elif col == 2:
-                    return self.tr("Description")
+                    return self.tr("Limit")
+                #elif col == 2:
+                #    return self.tr("Description")
                 else:
                     return ''
 
@@ -103,6 +108,8 @@ class InspectorLimitModel(QAbstractTableModel):
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
             rec = self._data[index.row()]
+            if index.column() == 0:
+                return rec.get('DisplayName', rec.get('Name'))
             return list(rec.values())[index.column()]
             
         elif role == Qt.EditRole:
