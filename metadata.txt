@@ -5,12 +5,13 @@
 [general]
 name=SensorThingsInspector 
 qgisMinimumVersion=3.38
-description=The plugin enables QGIS software (www.qgis.org) to access dynamic data from sensors, using SensorThingsAPI protocol (https://www.ogc.org/standards/sensorthings)
-version=2.0.3
+description=The plugin enables QGIS to inspect dynamic sensor data published using SensorThingsAPI protocol (https://www.ogc.org/standards/sensorthings).
+version=2.0.4
 author=Deda Next (Sandro Moretti)
 email=sandro.moretti@dedagroup.it
 
-about=This plugin for QGIS has been initially developed by Deda Next (Sandro Moretti) within the AIR-BREAK project and then further evolved into the current version. The plugin leverages on QGIS' SensorThings data provider to access and inspect SensorThingsAPIr endpoints and interact with temporal data (timeseries).
+about=This plugin has been developed by Sandro Moretti for Deda Next (https://www.dedanext.it/) within the AIR-BREAK project (https://airbreakferrara.net/) and then further evolved into the current version with the financial support of BRGM (https://www.brgm.fr/en). The plugin leverages on QGIS SensorThings data provider to access SensorThingsAPI endpoints (https://www.ogc.org/standards/sensorthings), visualize on map the position of their spatially-enabled entities (Locations, Multi/Datastreams and FeatureOfInterest) and inspect the related timeseries of Observations.
+
 
 tracker=https://github.com/Sandro71/SensorThingsInspector_QGIS-plugin/issues
 repository=https://github.com/Sandro71/SensorThingsInspector_QGIS-plugin
