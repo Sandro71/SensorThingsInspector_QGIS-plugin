@@ -1,5 +1,5 @@
 /**
- * SensorThingsInspector Plugin
+ * SensorThingsAPI Plugin
  *
  *  sensor-things.it.js
  *

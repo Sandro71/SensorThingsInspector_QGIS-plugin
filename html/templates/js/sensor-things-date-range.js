@@ -1,5 +1,5 @@
 /**
- * SensorThingsInspector Plugin
+ * SensorThingsAPI Plugin
  *
  *  Date utility functions.
  *

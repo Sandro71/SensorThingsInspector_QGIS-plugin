@@ -34,8 +34,8 @@ from qgis.PyQt.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetwork
 # pylint: disable=no-name-in-module
 from qgis.PyQt.QtWebKitWidgets import QWebView, QWebPage
 # plugin modules
-from SensorThingsInspector import __QGIS_PLUGIN_NAME__, __PLG_DEBUG__
-from SensorThingsInspector.log.logger import QgisLogger as logger
+from SensorThingsAPI import __QGIS_PLUGIN_NAME__, __PLG_DEBUG__
+from SensorThingsAPI.log.logger import QgisLogger as logger
 
 
 

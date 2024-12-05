@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""SensorThingsInspector config class
+"""SensorThingsAPI config class
 
 Description
 -----------

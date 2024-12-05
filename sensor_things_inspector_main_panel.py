@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""SensorThingsInspector main panel
+"""SensorThingsAPI main panel
 
 Description
 -----------
@@ -43,12 +43,12 @@ from qgis.gui import (QgsGui,
 
 from qgis.utils import iface
 
-from SensorThingsInspector import __QGIS_PLUGIN_NAME__, plgConfig
-from SensorThingsInspector.log.logger import QgisLogger as logger
-from SensorThingsInspector.utils.widget import QtWidgetUtils 
-from SensorThingsInspector.utils.layer_utils import LayerUtils 
-from SensorThingsInspector.sensor_things_inspector_layer import __SENSORTHINGS_PROVIDER_NAME__, SensorThingLayerUtils
-from SensorThingsInspector.sensor_things_inspector_model import InspectorLimitModel, LimitDelegate
+from SensorThingsAPI import __QGIS_PLUGIN_NAME__, plgConfig
+from SensorThingsAPI.log.logger import QgisLogger as logger
+from SensorThingsAPI.utils.widget import QtWidgetUtils 
+from SensorThingsAPI.utils.layer_utils import LayerUtils 
+from SensorThingsAPI.sensor_things_inspector_layer import __SENSORTHINGS_PROVIDER_NAME__, SensorThingLayerUtils
+from SensorThingsAPI.sensor_things_inspector_model import InspectorLimitModel, LimitDelegate
 
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -211,10 +211,7 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
         
         self.tvwObservationInspectorLimits.setColumnWidth(0, 190)
         
-        
-        
-        
-        
+
         #####################################################################
         # Start
         self.layerSetting = {}
@@ -282,6 +279,11 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
         
         if self.sql_editor is not None:
             layer.setSubsetString( self.sql_editor.text() )
+            
+        LayerUtils.set_visibility([layer], False)
+        LayerUtils.set_visibility([layer], True)
+        
+        self.setLayer(layer)
         
         
     def onSourceConfigChanged(self):
@@ -322,6 +324,8 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
         opts = QgsVectorLayer.LayerOptions()
         
         layer = QgsVectorLayer( vectorLayerPath, layerName, providerKey, options=opts )
+        if layer.geometryType() == Qgis.GeometryType.Null:
+            logger.restoreOverrideCursor()
         
         return QgsProject.instance().addMapLayer( layer, True )
      
@@ -727,12 +731,11 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
         """Update Inspector panel"""
         layer = self.getLayer()
         
-        if layer is None or not layer.isValid():
-            self.tvwInspectorLimits.setEnabled(False)
-            return
+        enable_grid = layer is not None and layer.isValid()
         
-        self.tvwInspectorLimits.setEnabled(True)
+        self.tvwInspectorLimits.setEnabled(enable_grid)
         
+        self.tvwObservationInspectorLimits.setEnabled(enable_grid)
         
     
     def showTemporalControlWidget(self, show: bool = True):  

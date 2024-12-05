@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Module to show\identify a SensorThingsInspector Lacation.
+"""Module to show\identify a SensorThingsAPI Lacation.
 
 Description
 -----------
@@ -32,12 +32,12 @@ from qgis.gui import QgsGui, QgsRubberBand
 from qgis.utils import iface
 
 # plugin modules
-from SensorThingsInspector import plgConfig, __QGIS_PLUGIN_NAME__ 
-from SensorThingsInspector.log.logger import QgisLogger as logger
-from SensorThingsInspector.html.generate import htmlUtil
-from SensorThingsInspector.sensor_things_inspector_layer import SensorThingLayerUtils, SensorThingLoadDataTask
-from SensorThingsInspector.sensor_things_osservazioni_dlg import SensorThingsObservationDialog
-from SensorThingsInspector.sensor_things_browser import SensorThingsRequestError, SensorThingsWebView
+from SensorThingsAPI import plgConfig, __QGIS_PLUGIN_NAME__ 
+from SensorThingsAPI.log.logger import QgisLogger as logger
+from SensorThingsAPI.html.generate import htmlUtil
+from SensorThingsAPI.sensor_things_inspector_layer import SensorThingLayerUtils, SensorThingLoadDataTask
+from SensorThingsAPI.sensor_things_osservazioni_dlg import SensorThingsObservationDialog
+from SensorThingsAPI.sensor_things_browser import SensorThingsRequestError, SensorThingsWebView
 
 
 # 
@@ -429,6 +429,10 @@ class SensorThingsLocationDialog(QtWidgets.QDialog):
     @pyqtSlot(str, result=int)
     def getLimit(self, name):
         return self.plugin.main_panel.getLimit(name)
+    
+    @pyqtSlot(str, result=int)
+    def getObservationLimit(self, name):
+        return self.plugin.main_panel.getObservationLimit(name)
     
     @pyqtSlot(str, str, int, str, str, str, result=QVariant)
     def getRequest(self, url, entity, featureLimit, expandTo, sql, prefix_attribs):

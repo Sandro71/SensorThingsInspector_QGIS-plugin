@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Module of SensorThingsInspector layer utilities.
+"""Module of SensorThingsAPI layer utilities.
 
 Description
 -----------

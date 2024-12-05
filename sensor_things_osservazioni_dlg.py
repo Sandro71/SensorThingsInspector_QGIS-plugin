@@ -33,12 +33,12 @@ from qgis.PyQt import QtWidgets
 from qgis.core import QgsDataSourceUri
 
 # plugin modules
-from SensorThingsInspector import __QGIS_PLUGIN_NAME__, plgConfig
-from SensorThingsInspector.log.logger import QgisLogger as logger
-from SensorThingsInspector.utils.file import FileUtil
-from SensorThingsInspector.html.generate import htmlUtil 
-from SensorThingsInspector.sensor_things_inspector_layer import SensorThingLayerUtils, SensorThingLoadDataTask
-from SensorThingsInspector.sensor_things_browser import SensorThingsWebView, SensorThingsRequestError
+from SensorThingsAPI import __QGIS_PLUGIN_NAME__, plgConfig
+from SensorThingsAPI.log.logger import QgisLogger as logger
+from SensorThingsAPI.utils.file import FileUtil
+from SensorThingsAPI.html.generate import htmlUtil 
+from SensorThingsAPI.sensor_things_inspector_layer import SensorThingLayerUtils, SensorThingLoadDataTask
+from SensorThingsAPI.sensor_things_browser import SensorThingsWebView, SensorThingsRequestError
 
 
 # 
