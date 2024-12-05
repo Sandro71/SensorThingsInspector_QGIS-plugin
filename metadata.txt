@@ -6,7 +6,7 @@
 name=SensorThingsInspector 
 qgisMinimumVersion=3.38
 description=The plugin enables QGIS software (www.qgis.org) to access dynamic data from sensors, using SensorThingsAPI protocol (https://www.ogc.org/standards/sensorthings)
-version=2.0.2
+version=2.0.3
 author=Deda Next (Sandro Moretti)
 email=sandro.moretti@dedagroup.it
 
