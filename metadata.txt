@@ -25,6 +25,8 @@ hasProcessingProvider=no
 # Tags are comma separated with spaces allowed
 tags=ogc, sensorthings api, sta, IoT
 
+homepage=https://github.com/Sandro71/SensorThingsInspector_QGIS-plugin
+
 # experimental flag
 #experimental=True
 
