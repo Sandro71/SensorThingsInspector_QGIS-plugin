@@ -3,17 +3,17 @@
 # This file should be included when you package your plugin.# Mandatory items:
 
 [general]
-name=Sensor Things Inspector 
-qgisMinimumVersion=3.37
-description=The plugin enables QGIS software (www.qgis.org) to access dynamic data from sensors, using SensorThingsInspector protocol (https://www.ogc.org/standards/sensorthings)
-version=1.1.6
+name=SensorThingsInspector 
+qgisMinimumVersion=3.38
+description=The plugin enables QGIS software (www.qgis.org) to access dynamic data from sensors, using SensorThingsAPI protocol (https://www.ogc.org/standards/sensorthings)
+version=2.0.0
 author=Deda Next (Sandro Moretti)
 email=sandro.moretti@dedagroup.it
 
-about=The SensorThingsInspector plugin for QGIS has been developed by Deda Next (Sandro Moretti) within the AIR-BREAK project. The plugin enables QGIS software to access dynamic data from sensors, using SensorThingsInspector protocol. The overall objective is to provide functionalities for accessing SensorThingsInspector endpoints and interact with temporal data (timeseries).
+about=This plugin for QGIS has been initially developed by Deda Next (Sandro Moretti) within the AIR-BREAK project and then further evolved into the current version. The plugin leverages on QGIS' SensorThings data provider to access and inspect SensorThingsAPIr endpoints and interact with temporal data (timeseries).
 
-tracker=http://bugs
-repository=http://repo
+tracker=https://github.com/Sandro71/SensorThingsInspector_QGIS-plugin/issues
+repository=https://github.com/Sandro71/SensorThingsInspector_QGIS-plugin
 # End of mandatory metadata
 
 # Recommended items:
@@ -23,13 +23,14 @@ hasProcessingProvider=no
 # changelog=
 
 # Tags are comma separated with spaces allowed
-tags=python
+tags=ogc, sensorthings api, sta, IoT
 
 homepage=http://homepage
 category=Plugins
 icon=icons/icon.png
+
 # experimental flag
-experimental=True
+#experimental=True
 
 # deprecated flag (applies to the whole plugin, not just a single version)
 deprecated=False
@@ -40,7 +41,8 @@ deprecated=False
 # plugin_dependencies=
 
 Category of the plugin: Raster, Vector, Database or Web
-# category=
+category=Plugins
+icon=icons/icon.png
 
 # If the plugin can run on QGIS Server.
 server=False
