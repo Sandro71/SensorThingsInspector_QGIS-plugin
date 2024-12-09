@@ -29,12 +29,12 @@ Members
 import os
 import re
 
-from PyQt5.QtCore import Qt, QEvent, QMetaType, QTimer
+from PyQt5.QtCore import Qt, QEvent, QMetaType, QTimer, pyqtSignal
 from PyQt5.QtWidgets import QDockWidget, QAbstractItemView
 
 from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
-from qgis.core import Qgis, QgsProject, QgsApplication, QgsStyle, QgsDataProvider, QgsVectorLayer
+from qgis.core import Qgis, QgsProject, QgsApplication, QgsStyle, QgsDataProvider, QgsMapLayer, QgsVectorLayer
 from qgis.gui import (QgsGui,
                       QgsRendererPropertiesDialog,
                       QgsAbstractDataSourceWidget,
@@ -56,6 +56,12 @@ FORM_CLASS, _ = uic.loadUiType(os.path.join(
     
 
 class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
+    """SensorThingsAPi Inspector main panel"""
+   
+    # signals   
+    layerSourceChanged = pyqtSignal(QgsMapLayer)
+    
+    
     def __init__(self, parent=None):
         """Constructor."""
         super().__init__(parent)
@@ -283,7 +289,9 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
         LayerUtils.set_visibility([layer], False)
         LayerUtils.set_visibility([layer], True)
         
-        self.setLayer(layer)
+        # emit signal for new layer source 
+        self.layerSourceChanged.emit(layer)
+        ##self.setLayer(layer)
         
         
     def onSourceConfigChanged(self):

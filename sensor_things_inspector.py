@@ -196,6 +196,8 @@ class SensorThingsInspectorPlugin(QObject):
         # create main dockable panel
         self.main_panel = SensorThingsInspectorMainPanel(parent= QgsApplication.instance().activeWindow())
         
+        self.main_panel.layerSourceChanged.connect(self.onCurrentLayerChanged)
+        
         self.iface.addDockWidget(Qt.RightDockWidgetArea, self.main_panel)
         
         self.iface.currentLayerChanged.connect(self.onCurrentLayerChanged) 
@@ -257,6 +259,7 @@ class SensorThingsInspectorPlugin(QObject):
         self.postazionedlg.deleteLater()
         self.postazionedlg = None
         
+        self.main_panel.layerSourceChanged.disconnect(self.onCurrentLayerChanged)
         self.main_panel.close()
         self.iface.removeDockWidget(self.main_panel)
         self.main_panel.deleteLater()

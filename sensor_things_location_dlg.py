@@ -343,8 +343,8 @@ class SensorThingsLocationDialog(QtWidgets.QDialog):
             
             # store data
             url = load_task.getUrl()
-            
-            self.page_data['things'] = load_task.data or []
+           
+            self.page_data['things'] = list({d.get('@iot.id', '???'): d for d in (load_task.data or [])}.values())
             
             for thing in self.page_data['things']:
                 thing['url'] = url
