@@ -1,6 +1,6 @@
 # SensorThings Inspector plugin
 
-The SensorThings Inspector plugin is an evolution of the old SensorThingsAPI Viewer plugin for QGIS and has been developed by Deda Next (www.dedanext.it) with the support of Faunalia (www.faunalia.eu) and BRGM (https://www.brgm.fr/en), the French Geological Survey.
+The SensorThings Inspector plugin is an evolution of the old SensorThingsAPI Viewer plugin for QGIS and has been developed by Deda Next (www.dedanext.it) with the financial support of BRGM (https://www.brgm.fr/en), the French Geological Survey, through the Water4All partnership (https://www.water4all-partnership.eu/).
 
 The plugin enables QGIS (www.qgis.org, versions 3.384 onwards) to inspect time-series data provided by endpoints compliant with OGC SensorThings API standard protocol (https://www.ogc.org/standards/sensorthings).
 
