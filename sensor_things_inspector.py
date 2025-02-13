@@ -24,7 +24,7 @@ from qgis.PyQt.QtWidgets import QAction, QMenu, QDockWidget
 from .resources import *
 
 # import plugin modules
-from SensorThingsAPI import __QGIS_PLUGIN_NAME__, plgConfig
+from SensorThingsAPI import __QGIS_PLUGIN_NAME__, __PLG_DEBUG__, plgConfig
 from SensorThingsAPI.log.logger import QgisLogger as logger
 from SensorThingsAPI.utils.layer_utils import LayerUtils 
 from SensorThingsAPI.sensor_things_inspector_layer import __SENSORTHINGS_PROVIDER_NAME__
@@ -305,7 +305,11 @@ class SensorThingsInspectorPlugin(QObject):
             return
         fid = fids[0]
         
-        # show Postazione dialog 
+        # show Postazione dialog inspector
+        if __PLG_DEBUG__:
+            self.postazionedlg.showInspector(self.postazionedlg)
+            
+        # show Postazione dialog
         self.postazionedlg.show(layer, fid, fids)
   
   

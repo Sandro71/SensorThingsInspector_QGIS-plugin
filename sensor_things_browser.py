@@ -25,168 +25,171 @@ Author(s)
 Members
 -------
 """
-import json
+from PyQt5.QtCore import Qt, QUrl, pyqtSignal, pyqtSlot, pyqtProperty 
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QDialog
+from PyQt5.QtQuick import QQuickView
 
-from qgis.core import QgsNetworkAccessManager
-from qgis.PyQt.QtCore import Qt, QUrl
-from qgis.PyQt.QtWebKit import QWebSettings
-from qgis.PyQt.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
-# pylint: disable=no-name-in-module
-from qgis.PyQt.QtWebKitWidgets import QWebView, QWebPage
-# plugin modules
-from SensorThingsAPI import __QGIS_PLUGIN_NAME__, __PLG_DEBUG__
-from SensorThingsAPI.log.logger import QgisLogger as logger
+from qgis.core import Qgis, QgsMessageLog
+from qgis.gui import QgsGui
 
+from SensorThingsAPI import __PLG_DEBUG__
 
+import os
 
+DEBUG_PORT = '5588'
+DEBUG_URL = 'http://127.0.0.1:%s' % DEBUG_PORT
+
+if __PLG_DEBUG__:
+    os.environ['QTWEBENGINE_REMOTE_DEBUGGING'] = DEBUG_PORT
+
+QML_DIR = os.path.join(os.path.dirname( os.path.abspath(__file__) ), 'qml/')
+ 
 # 
 #-----------------------------------------------------------
 class SensorThingsRequestError(Exception):
     """Base class for other exceptions"""
-
-# 
+ 
+#           
 #-----------------------------------------------------------
-class SensorThingsNetworkAccessManager(QNetworkAccessManager):
-    """QNetworkAccessManager subclass.
-
-    This subclass is used to deny external resources.
-    """
-
-    def __init__(self, deny_external_links, parent=None):
-        self._deny_external_links = deny_external_links
-        super().__init__(parent)
+class WebEngineInspectorDialog(QDialog):
     
-    def createRequest(self, op, request, outgoingData=None):
-        strURL = str(request.url().toString())
-        if __PLG_DEBUG__:
-            logger.log(logger.Level.Info, "{}: {}".format(self.tr("Request URL"), strURL))
-            
-        if self._deny_external_links and\
-           not request.url().isLocalFile():
-            request.setUrl(QUrl('file:///web/denied.resouce'))
-            
-        return super().createRequest(op, request, outgoingData)
+    def __init__(self, parent=None, flags=Qt.WindowFlags()):
+        """ """
+        super().__init__(parent, flags)
+        
+        self.setAttribute(Qt.WA_DeleteOnClose)
+        
+        self.url = DEBUG_URL
+       
+        # Dialog settings
+        QgsGui.enableAutoGeometryRestore(self)
+        
+        self.setWindowTitle(self.tr("Web Engine Inspector"))
+        
+        self.setAutoFillBackground(True)
+        
+        self.setMinimumSize(900, 500)
+        
+        inspector = QQuickView()
+        
+        inspector.setResizeMode(QQuickView.SizeRootObjectToView)
+        
+        inspector.rootContext().setContextProperty("debug_url", self.url)
+        
+        inspector.setSource(QUrl.fromLocalFile(QML_DIR+'webinspector.qml'))
+        
+        container = QWidget.createWindowContainer(inspector, self)
+        
+        # Create layout and add widgets
+        layout = QVBoxLayout()
+        
+        layout.setContentsMargins(0, 0, 0, 0)
+        
+        layout.addWidget(container)
+        
+        # Set dialog layout
+        self.setLayout(layout)
+ 
+#----------------------------------------------------------- 
+class WebEngineDialog(QDialog):
     
-    @staticmethod
-    def requestExternalData(url: str, options: dict=None, nam: QgsNetworkAccessManager=None):
-        """Method to request external data synchronously"""
-        
-        # init
-        nam = nam or QgsNetworkAccessManager.instance()
-        url = str(url).strip()
-        options = options if isinstance(options, dict) else {}
-        
-        # request
-        request = QNetworkRequest(QUrl(url))
-        request.setPriority(QNetworkRequest.HighPriority)
-        request.setAttribute(QNetworkRequest.HttpPipeliningAllowedAttribute, True)
-        
-        # no cache
-        request.setAttribute(QNetworkRequest.CacheLoadControlAttribute, QNetworkRequest.AlwaysNetwork)
-        request.setAttribute(QNetworkRequest.CacheSaveControlAttribute, False)
-        
-        # debug
-        if __PLG_DEBUG__:
-            logger.log(logger.Level.Info, "{}: {}".format(SensorThingsNetworkAccessManager.tr("Request URL"), url))
-        
-        # send request 
-        reply = nam.blockingGet(request)
-        
-        # check if error
-        if reply.error() != QNetworkReply.NoError:
-            raise SensorThingsRequestError(reply.errorString())
-        
-        status_code = reply.attribute(QNetworkRequest.HttpStatusCodeAttribute)
-        if status_code != 200:
-            raise SensorThingsRequestError(reply.errorString())
-        
-        # return data
-        if hasattr( reply, 'readAll' ):
-            result = json.loads(str( reply.readAll().data(), 'utf-8' ))
-        else:
-            result = json.loads(str( reply.content(), 'utf-8' ))
+    urlChanged = pyqtSignal(str)
     
-        # get source data
-        dataSrc = str(options.get('dataSrc', '')).strip()
-        if dataSrc and isinstance(result, dict):
-            result = result.get(dataSrc, result)
-            
-        # return data
-        return result  
+    htmlLoadRaised = pyqtSignal(str, str)
     
+    runJavaScriptRaised = pyqtSignal(str)
     
-#-----------------------------------------------------------
-class SensorThingsWebPage(QWebPage):
-    """QWebPage subclass that opens links in system browser
-
-    This subclass is used to deny external resources.
-    """
-    
-    def __init__(self, deny_external_urls, parent=None):
-        super().__init__(parent)
-        self._deny_external_urls = deny_external_urls
-
-    def acceptNavigationRequest(self, frame, request, navigationType):
-        strURL = str(request.url().toString())
-        if __PLG_DEBUG__:
-            logger.log(logger.Level.Info, "{}: {}".format(self.tr("Webview request"), strURL))
+    def __init__(self, parent=None, flags=Qt.WindowFlags()):
+        """Constructor"""
+        super().__init__(parent, flags)
         
-        if self._deny_external_urls and\
-           not request.url().isLocalFile():
-            return False
+        self._url = ""
         
-        return super().acceptNavigationRequest(frame, request, navigationType)
-
-# 
-#-----------------------------------------------------------    
-class SensorThingsWebView(QWebView):
-    """Derived QWebView class to deny external resources"""
-    
-    def __init__(self, parent=None):
-        # init
-        QWebView.__init__(self, parent=parent)
+        self._dlgInspector = None
+        
+        # Dialog settings
+        #################self.setAttribute(Qt.WA_DeleteOnClose)
+        
+        QgsGui.enableAutoGeometryRestore(self)
+        
+        self.setWindowTitle(self.tr("SensorThings Identify"))
+        
+        self.setAutoFillBackground(True)
+        
+        self.setMinimumSize(900, 500)
         
         # Create widgets
-        nam = SensorThingsNetworkAccessManager(deny_external_links=True)
-        webPage = SensorThingsWebPage(deny_external_urls=True)
-        webPage.setNetworkAccessManager(nam)
-        webPage.networkAccessManager().sslErrors.connect(self._handleSslErrors)
-        self.setPage(webPage)
-        #super().connect(self.ui.webView,QtCore.SIGNAL("titleChanged (const QString&amp;)"), self.adjustTitle)
-        settings = self.settings()
-        ##settings.setAttribute(QWebSettings.LocalContentCanAccessRemoteUrls, False)
-        ##settings.setAttribute(QWebSettings.LocalContentCanAccessFileUrls, False)
-        ##settings.setAttribute(QWebSettings.XSSAuditingEnabled, True)
-        settings.setDefaultTextEncoding('utf-8')
+        view = QQuickView()
         
-        if __PLG_DEBUG__:
-            settings.setAttribute(QWebSettings.DeveloperExtrasEnabled, True)
-        else:
-            self.setContextMenuPolicy(Qt.NoContextMenu)
-   
-    def _handleSslErrors(self, reply, errors):
-        """Handle SSL errors"""
+        view.setTitle(self.tr("SensorThings Identify"))
         
-        logger.log(
-                logger.Level.Critical, 
-                "{}: {}".format(self.tr("SSL error"), errors), 
-                tag=__QGIS_PLUGIN_NAME__)
+        view.setResizeMode(QQuickView.SizeRootObjectToView)
+
+        view.rootContext().setContextProperty("manager", self)
         
-        reply.ignoreSslErrors()
+        view.setSource(QUrl.fromLocalFile(QML_DIR+'webengine.qml'))
+ 
+        if view.status() == QQuickView.Error:
+            for error in view.errors():
+                QgsMessageLog.logMessage(error.description())
+            return
+        #
+        container = QWidget.createWindowContainer(view)
         
-    def _injectPyToJs(self, obj, js_objname='pyjsapi'):
-        """Add pyapi to javascript window object"""
+        # Create layout and add widgets
+        layout = QVBoxLayout()
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.addWidget(container)
         
-        self.page().mainFrame().addToJavaScriptWindowObject(js_objname, obj)
+        # Set dialog layout
+        self.setLayout(layout)
         
-    def injectPyToJs(self, obj, js_objname='pyjsapi'):
-        """Add pyapi to javascript window object"""
+    def showInspector(self, dialog):
+        """Show WebEngineView Inspector Dialog"""
         
-        # add Python object to js
-        self._injectPyToJs(obj, js_objname)
-        
-        # add Python object to js on document loaded 
-        self.page().mainFrame().javaScriptWindowObjectCleared.connect(
-            lambda o=obj, n=js_objname, self=self: self._injectPyToJs(o, n))
+        try:
+            self._dlgInspector.close()
+        except:
+            pass
             
+        self._dlgInspector = WebEngineInspectorDialog(parent=dialog)
+        self._dlgInspector.show() 
+        
+    @pyqtProperty(str, notify=urlChanged)
+    def url(self):
+        return self._url
     
+    @url.setter
+    def url(self, u):
+        if self._url != u:
+            self._url = u
+            self.urlChanged.emit(u)
+     
+    @pyqtSlot(str)
+    def logError(self, message):
+        ##logger.log(logger.Level.Critical, message, tag=__QGIS_PLUGIN_NAME__)
+        QgsMessageLog.logMessage(message, "SensorThings", Qgis.Critical)
+    
+    @pyqtSlot(str)
+    def logSslError(self, message):
+        msg = "{}: {}".format(self.tr("SSL error"), message)
+        self.logError(msg)
+    
+    """    
+    @QtCore.pyqtSlot(str, result=str)
+    def renderHtmlTemplate(self, templateName):
+        pass
+        
+    def loadHtmlTemplate(self, templateName):
+        s = manager.renderHtmlTemplate(templateName)
+        self.htmlLoadRaised.emit(s)
+    """
+    
+    @pyqtSlot(str,str)
+    def setHtml(self, html, base):
+        self.htmlLoadRaised.emit(html, base)
+        
+    def runJavaScript(self, script):
+        self.runJavaScriptRaised.emit(script)
+        
+         

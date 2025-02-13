@@ -38,12 +38,12 @@ from SensorThingsAPI.log.logger import QgisLogger as logger
 from SensorThingsAPI.utils.file import FileUtil
 from SensorThingsAPI.html.generate import htmlUtil 
 from SensorThingsAPI.sensor_things_inspector_layer import SensorThingLayerUtils, SensorThingLoadDataTask
-from SensorThingsAPI.sensor_things_browser import SensorThingsWebView, SensorThingsRequestError
+from SensorThingsAPI.sensor_things_browser import WebEngineDialog, SensorThingsRequestError
 
 
 # 
 #-----------------------------------------------------------
-class SensorThingsObservationDialog(QtWidgets.QDialog):
+class SensorThingsObservationDialog(WebEngineDialog):
     """Dialog to show Observations info"""
     
     
@@ -64,12 +64,12 @@ class SensorThingsObservationDialog(QtWidgets.QDialog):
         self._dataSourceUri = QgsDataSourceUri()
         
         # add widgets
-        self.setLayout(QtWidgets.QGridLayout())
-        self.layout().setContentsMargins(0, 0, 0, 0)
+        #######################################self.setLayout(QtWidgets.QGridLayout())
+        #######################################self.layout().setContentsMargins(0, 0, 0, 0)
         
-        self.webView = SensorThingsWebView(parent=self)
-        self.webView.injectPyToJs(self, 'pyjsapi')
-        self.layout().addWidget(self.webView)
+        self.webView = self ####################SensorThingsWebView(parent=self)
+        #######################################self.webView.injectPyToJs(self, 'pyjsapi')
+        #######################################self.layout().addWidget(self.webView)
         
         # settings
         self.setWindowTitle(self.tr("Observations"))
@@ -119,7 +119,7 @@ class SensorThingsObservationDialog(QtWidgets.QDialog):
             # load HTL document 
             template_name = 'observations.html'
             template = htmlUtil.generateTemplate(template_name)
-            self.webView.setHtml(template.render(self.page_data)) 
+            self.webView.setHtml(template.render(self.page_data), htmlUtil.getBaseUrl()) 
             
             # show dialog 
             QtWidgets.QDialog.show(self)
@@ -138,11 +138,10 @@ class SensorThingsObservationDialog(QtWidgets.QDialog):
     
     
     def _show_web_spinner(self, show):
-        frame =self.webView.page().mainFrame()
         if show:
-            frame.evaluateJavaScript("sensorThingsShowSpinner(true);")
+            self.runJavaScript("sensorThingsShowSpinner(true);")
         else:
-            frame.evaluateJavaScript("sensorThingsShowSpinner(false);")
+            self.runJavaScript("sensorThingsShowSpinner(false);")
     
     def _composePhenomenonTime(self, row):
         """Compose and add phenomenonTime attribute"""

@@ -23,8 +23,8 @@ function quote(value) {
  * (pyjsapi.getRequest)
  */
 function requestPromise(url, entity, featureLimit, expandTo, sql, prefix_attribs) {
-    return new Promise((resolve, reject) => {
-        var request = pyjsapi.getRequest(url, entity, featureLimit, expandTo, sql, prefix_attribs);
+    return new Promise(async (resolve, reject) => {
+        var request = await pyjsapi.getRequest(url, entity, featureLimit, expandTo, sql, prefix_attribs);
         if (!request) {
             return reject("Impossibile istanziare una promessa di tipo Request.")
         }

@@ -37,12 +37,12 @@ from SensorThingsAPI.log.logger import QgisLogger as logger
 from SensorThingsAPI.html.generate import htmlUtil
 from SensorThingsAPI.sensor_things_inspector_layer import SensorThingLayerUtils, SensorThingLoadDataTask
 from SensorThingsAPI.sensor_things_osservazioni_dlg import SensorThingsObservationDialog
-from SensorThingsAPI.sensor_things_browser import SensorThingsRequestError, SensorThingsWebView
+from SensorThingsAPI.sensor_things_browser import SensorThingsRequestError, WebEngineDialog
 
 
 # 
 #-----------------------------------------------------------
-class SensorThingsLocationDialog(QtWidgets.QDialog):
+class SensorThingsLocationDialog(WebEngineDialog):
     """Dialog to show Location info"""
     
     def __init__(self, plugin, parent=None, flags=Qt.WindowFlags()):
@@ -70,12 +70,12 @@ class SensorThingsLocationDialog(QtWidgets.QDialog):
         self.setMinimumSize(900, 500)
         
         # add widgets
-        self.setLayout(QtWidgets.QGridLayout())
-        self.layout().setContentsMargins(0, 0, 0, 0)
+        ###############################################self.setLayout(QtWidgets.QGridLayout())
+        ###############################################self.layout().setContentsMargins(0, 0, 0, 0)
         
-        self.webView = SensorThingsWebView(parent=self)
-        self.webView.injectPyToJs(self, 'pyjsapi')
-        self.layout().addWidget(self.webView)
+        self.webView = self ###########################SensorThingsWebView(parent=self)
+        ###############################################self.webView.injectPyToJs(self, 'pyjsapi')
+        ###############################################self.layout().addWidget(self.webView)
         
         self.osservazDlg = SensorThingsObservationDialog(self.plugin, parent=self)
         
@@ -239,11 +239,10 @@ class SensorThingsLocationDialog(QtWidgets.QDialog):
     
     
     def _show_web_spinner(self, show):
-        frame =self.webView.page().mainFrame()
         if show:
-            frame.evaluateJavaScript("sensorThingsShowSpinner(true);")
+            self.runJavaScript("sensorThingsShowSpinner(true);")
         else:
-            frame.evaluateJavaScript("sensorThingsShowSpinner(false);")
+            self.runJavaScript("sensorThingsShowSpinner(false);")
         
     
        
@@ -260,7 +259,7 @@ class SensorThingsLocationDialog(QtWidgets.QDialog):
             # load HTL document 
             template_name = 'location.html'
             template = htmlUtil.generateTemplate(template_name)
-            self.webView.setHtml(template.render(self.page_data))
+            self.webView.setHtml(template.render(self.page_data), htmlUtil.getBaseUrl())
         
             # show dialog 
             QtWidgets.QDialog.show(self)
