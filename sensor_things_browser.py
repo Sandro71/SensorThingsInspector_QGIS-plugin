@@ -192,4 +192,3 @@ class WebEngineDialog(QDialog):
     def runJavaScript(self, script):
         self.runJavaScriptRaised.emit(script)
         
-         

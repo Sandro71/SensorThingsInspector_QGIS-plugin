@@ -135,9 +135,9 @@ class SensorThingsLocationDialog(WebEngineDialog):
                 if feat:
                     feats_info.append({
                         'fid': fid,
-                        'locId': SensorThingLayerUtils.getFeatureAttribute(feat, "id"),
-                        'locName': SensorThingLayerUtils.getFeatureAttribute(feat, "name"),
-                        'lodDesc': SensorThingLayerUtils.getFeatureAttribute(feat, "description")
+                        'locId': SensorThingLayerUtils.getFeatureAttribute(feature, "id"),
+                        'locName': SensorThingLayerUtils.getFeatureAttribute(feature, "name"),
+                        'lodDesc': SensorThingLayerUtils.getFeatureAttribute(feature, "description")
                     })
                     
             # hide Osservazioni dialog
