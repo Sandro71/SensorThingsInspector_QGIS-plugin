@@ -272,7 +272,7 @@ $(document).ready(function() {
 					for (var i=0; i<prop_data.length; ++i) {
 						
 						var color = line_colors[i % line_colors_len];
-					
+						
 						chart_data.datasets.push({
 							
 							label: prop_data[i].name,
@@ -386,7 +386,7 @@ $(document).ready(function() {
 					render: (function() {
 						var index = i;
 						return function (data, type, row) { 
-							return data[index]; 
+							return data[index];
 						}
 					})()
 				});
@@ -453,6 +453,13 @@ $(document).ready(function() {
 						rows.forEach(row => {
 							// compose phenomenonTime attribute
 							row['phenomenonTime'] = ComposePhenomenonTime(row.phenomenonTimeStart, row.phenomenonTimeEnd);
+							
+							// correct results for multidatastreams
+							// thanks to Richard Duivenvoorde
+							if (!!isMultidataStream && typeof row['result'] === "string")
+							{
+								row['result'] = row['result'].split(',');
+							}
 						});
 						
 						callback({ data: d });
