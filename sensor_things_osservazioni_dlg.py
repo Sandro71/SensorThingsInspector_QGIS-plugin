@@ -23,12 +23,11 @@ Members
 """
 import os
 import csv
+import json
 
-# Qgis\PyQt5 modules
-from PyQt5.QtCore import Qt, QVariant, QDateTime
-from PyQt5.QtWidgets import QFileDialog
-
-from qgis.PyQt.QtCore import pyqtSlot
+# Qgis\PyQt modules
+from qgis.PyQt.QtCore import Qt, pyqtSlot
+from qgis.PyQt.QtWidgets import QFileDialog
 from qgis.PyQt import QtWidgets
 from qgis.core import QgsDataSourceUri
 
@@ -37,7 +36,10 @@ from SensorThingsAPI import __QGIS_PLUGIN_NAME__, plgConfig
 from SensorThingsAPI.log.logger import QgisLogger as logger
 from SensorThingsAPI.utils.file import FileUtil
 from SensorThingsAPI.html.generate import htmlUtil 
-from SensorThingsAPI.sensor_things_inspector_layer import SensorThingLayerUtils, SensorThingLoadDataTask
+from SensorThingsAPI.sensor_things_inspector_layer import (
+    SensorThingLayerUtils,
+    SensorThingLoadDataTask,
+)
 from SensorThingsAPI.sensor_things_browser import WebEngineDialog, SensorThingsRequestError
 
 
@@ -47,14 +49,14 @@ class SensorThingsObservationDialog(WebEngineDialog):
     """Dialog to show Observations info"""
     
     
-    def __init__(self, plugin, parent=None, flags=Qt.WindowFlags()):
+    def __init__(self, plugin, parent=None):
         """Constructor
         
         :param parent: 
         :type parent: QtWidgets
         """
         # init
-        super().__init__(parent, flags)
+        super().__init__(parent)
         
         self.plugin = plugin
         self.page_data = {}
@@ -63,16 +65,9 @@ class SensorThingsObservationDialog(WebEngineDialog):
         self._st_load_tasks = []
         self._dataSourceUri = QgsDataSourceUri()
         
-        # add widgets
-        #######################################self.setLayout(QtWidgets.QGridLayout())
-        #######################################self.layout().setContentsMargins(0, 0, 0, 0)
-        
-        self.webView = self ####################SensorThingsWebView(parent=self)
-        #######################################self.webView.injectPyToJs(self, 'pyjsapi')
-        #######################################self.layout().addWidget(self.webView)
-        
-        # settings
         self.setWindowTitle(self.tr("Observations"))
+        self.setWindowFlag(Qt.WindowType.Window, True)
+        self.setWindowModality(Qt.WindowModality.NonModal)
         
     
     def closeEvent(self, _):
@@ -108,22 +103,19 @@ class SensorThingsObservationDialog(WebEngineDialog):
     def show(self, data, ds_uri):
         """Show Osservazioni grid"""
         try:
-            # init
             self._dataSourceUri = ds_uri
             self.page_data = data or {}
             self.csv_options = {}
-            
-            # add config
-            self.page_data['chart_opts'] = plgConfig.get_value('chart',{})
-            
-            # load HTL document 
+            self.page_data['chart_opts'] = plgConfig.get_value('chart', {})
+
             template_name = 'observations.html'
             template = htmlUtil.generateTemplate(template_name)
-            self.webView.setHtml(template.render(self.page_data), htmlUtil.getBaseUrl()) 
-            
-            # show dialog 
+            self.setHtml(template.render(self.page_data), htmlUtil.getBaseUrl())
+
             QtWidgets.QDialog.show(self)
-            
+            self.raise_()
+            self.activateWindow()
+
         except SensorThingsRequestError as ex:
             logger.msgbar(
                 logger.Level.Critical,
@@ -144,23 +136,15 @@ class SensorThingsObservationDialog(WebEngineDialog):
             self.runJavaScript("sensorThingsShowSpinner(false);")
     
     def _composePhenomenonTime(self, row):
-        """Compose and add phenomenonTime attribute"""
-        
-        phenomenonTimeStart = row.get('phenomenonTimeStart', '')
-        if isinstance(phenomenonTimeStart, QDateTime):
-            phenomenonTimeStart = phenomenonTimeStart.toString(Qt.ISODateWithMs)
-            
-        phenomenonTimeEnd = row.get('phenomenonTimeEnd', '')
-        if isinstance(phenomenonTimeEnd, QDateTime):
-            phenomenonTimeEnd = phenomenonTimeEnd.toString(Qt.ISODateWithMs)
-            
-        if phenomenonTimeStart and phenomenonTimeEnd:
-            return "{}/{}".format(phenomenonTimeStart, phenomenonTimeEnd)
-        
+        row = row or {}
+        combined = row.get('phenomenonTime')
+        if combined:
+            return str(combined)
+        start = row.get('phenomenonTimeStart', '')
+        end = row.get('phenomenonTimeEnd', '')
+        if start and end:
+            return "{}/{}".format(start, end)
         return ''
-        
-            
-    
     def _export_csv_callback(self, oss_data):
         """Private method to export observations to CSV file"""
         try:
@@ -258,61 +242,31 @@ class SensorThingsObservationDialog(WebEngineDialog):
             return
     
     
-    @pyqtSlot(result=QVariant)
-    def getPageData(self):
-        """Injected method to get page data"""
-        return self.page_data
-    
     @pyqtSlot(str, result=int)
     def getLimit(self, name):
+        if name == 'featureLimit':
+            return SensorThingLayerUtils.getFeatureLimit(self.plugin.main_panel.getLayer())
         return self.plugin.main_panel.getObservationLimit(name)
-    
-    @pyqtSlot(str, str, int, str, str, str, result=QVariant)
-    def getRequest(self, url, entity, featureLimit, expandTo, sql, prefix_attribs):
-        """Injected method to return a new request to get data asynchronously"""
+
+    @pyqtSlot(str, str)
+    def exportCSV(self, url, options_json):
+        """Export observations to CSV (options as JSON string)."""
         try:
-            # Compose uri for query layer
-            uri = SensorThingLayerUtils.createDataSourceUri(
-                self._dataSourceUri, url, entity, featureLimit, expandTo, sql
-            )
-            
-            # Create load data task
-            request = SensorThingLoadDataTask(uri, prefix_attribs=prefix_attribs, rename_attribs={'id':'@iot.id', 'selfLink':'@iot.selfLink'})
-            
-            request.rejected.connect(self.rejectRequest)
-            
-            self._st_load_tasks.append(request)
-            
-            return request 
-            
-        except Exception as ex:
-            self.logError(str(ex))
-            return None
-    
-        
-    @pyqtSlot(str, QVariant)
-    def exportCSV(self, url, options):
-        """Injected method to request export observations to CSV file"""
-        try:
-            # show spinner
+            options = json.loads(options_json) if options_json else {}
             self._show_web_spinner(True)
-            
-            # init
-            self.csv_options = options or {}
-            
-            # request Observation data 
-            self._st_load_task = self.getRequest(
-                url= url, 
-                entity= options.get('query_entity'),
-                featureLimit= options.get('query_featureLimit', self.getLimit('observationLimit')), 
-                expandTo= options.get('query_expandTo'),  
-                sql= options.get('query_filter', "id eq ''"), 
-                prefix_attribs= options.get('query_prefix_attribs', 'Observation_')
+            self.csv_options = options
+
+            self._st_load_task = self._create_load_task(
+                url=url,
+                entity=options.get('query_entity'),
+                featureLimit=options.get('query_featureLimit', self.getLimit('observationLimit')),
+                expandTo=options.get('query_expandTo'),
+                sql=options.get('query_filter', "id eq ''"),
+                prefix_attribs=options.get('query_prefix_attribs', 'Observation_'),
             )
             self._st_load_task.resolved.connect(self._export_csv_callback)
             self._st_load_task.get()
-            
-            
+
         except Exception as ex:
             self.logError(str(ex))
             return False

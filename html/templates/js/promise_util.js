@@ -17,19 +17,65 @@ function quote(value) {
     return value;
 }
 
-/**
- * Returns a promise about an asyncronous request
- * done by QGIS Api via Python injected object
- * (pyjsapi.getRequest)
- */
+async function unwrapChannel(value) {
+    if (value && typeof value.then === 'function') {
+        return await value;
+    }
+    return value;
+}
+
+function parsePageData(raw) {
+    if (raw == null || raw === '') {
+        return {};
+    }
+    if (typeof raw === 'string') {
+        return JSON.parse(raw);
+    }
+    if (typeof raw === 'object' && !Array.isArray(raw)) {
+        return raw;
+    }
+    return {};
+}
+
+function parseFetchResult(raw) {
+    if (raw == null || raw === '') {
+        return [];
+    }
+    if (typeof raw === 'string') {
+        return JSON.parse(raw);
+    }
+    if (Array.isArray(raw)) {
+        return raw;
+    }
+    return [];
+}
+
 function requestPromise(url, entity, featureLimit, expandTo, sql, prefix_attribs) {
-    return new Promise(async (resolve, reject) => {
-        var request = await pyjsapi.getRequest(url, entity, featureLimit, expandTo, sql, prefix_attribs);
-        if (!request) {
-            return reject("Impossibile istanziare una promessa di tipo Request.")
+    return (async function() {
+        try {
+            var requestId = await unwrapChannel(pyjsapi.startFetchRequest(
+                String(url),
+                String(entity),
+                String(featureLimit),
+                expandTo || '',
+                sql || '',
+                prefix_attribs || ''
+            ));
+            if (!requestId) {
+                return [];
+            }
+
+            for (var attempts = 0; attempts < 2400; attempts++) {
+                var raw = await unwrapChannel(pyjsapi.getFetchResult(String(requestId)));
+                if (raw !== '' && raw != null) {
+                    return parseFetchResult(raw);
+                }
+                await new Promise(function(resolve) { setTimeout(resolve, 50); });
+            }
+            return [];
+        } catch (e) {
+            console.error('requestPromise error:', e);
+            return [];
         }
-        request.resolved.connect(resolve);
-        request.rejected.connect(reject);
-        request.get();
-    });
+    })();
 }

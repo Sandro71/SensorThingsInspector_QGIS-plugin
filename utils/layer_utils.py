@@ -15,8 +15,8 @@
 """
 from functools import partial
 
-from PyQt5.QtCore import Qt, QEventLoop, QVariant, QCoreApplication
-from PyQt5.QtWidgets import QDialog, QComboBox
+from qgis.PyQt.QtCore import Qt, QEventLoop, QCoreApplication, QMetaType
+from qgis.PyQt.QtWidgets import QDialog, QComboBox
 from qgis.core import (QgsWkbTypes, 
                        Qgis,
                        QgsApplication,
@@ -50,18 +50,18 @@ class QgisAppFieldValueConverter(QgsVectorFileWriter.FieldValueConverter):
             idx = self.__mAttributesExportNames.indexOf( field.name() )
 
         if idx in self.__mAttributesAsDisplayedValues:
-            return QgsField( field.name(), QVariant.String )
+            return QgsField(field.name(), QMetaType.Type.String)
         
         return field
        
     
-    def convert(self, idx: int, value: QVariant):
+    def convert(self, idx: int, value):
         if not self.__mLayer or not idx in self.__mAttributesAsDisplayedValues:
             return value
         
         setup = QgsGui.editorWidgetRegistry().findBest( self.__mLayer, self.__mLayer.fields().field( idx ).name() )
         fieldFormatter = QgsApplication.fieldFormatterRegistry().fieldFormatter( setup.type() )
-        v = fieldFormatter.representValue( self.__mLayer, idx, setup.config(), QVariant(), value )
+        v = fieldFormatter.representValue(self.__mLayer, idx, setup.config(), None, value)
         return v
        
 
@@ -181,7 +181,7 @@ class LayerUtils:
                         format_combo.removeItem(index)    
         
         # Show export dialog
-        if dialog.exec() != QDialog.Accepted:
+        if dialog.exec() != QDialog.DialogCode.Accepted:
             return vectorFilename
          
         # Export layer
@@ -251,7 +251,7 @@ class LayerUtils:
         
         QgsApplication.taskManager().addTask( writerTask )
         
-        QgsApplication.setOverrideCursor(Qt.WaitCursor)
-        QgsApplication.processEvents(QEventLoop.ExcludeUserInputEvents)
+        QgsApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        QgsApplication.processEvents(QEventLoop.ProcessEventsFlag.ExcludeUserInputEvents)
             
         return vectorFilename

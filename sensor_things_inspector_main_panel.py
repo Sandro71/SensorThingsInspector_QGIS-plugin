@@ -29,12 +29,12 @@ Members
 import os
 import re
 
-from PyQt5.QtCore import Qt, QEvent, QMetaType, QTimer, pyqtSignal
-from PyQt5.QtWidgets import QDockWidget, QAbstractItemView
+from qgis.PyQt.QtCore import Qt, QEvent, QMetaType, QTimer, pyqtSignal
+from qgis.PyQt.QtWidgets import QDockWidget, QAbstractItemView
 
 from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
-from qgis.core import Qgis, QgsProject, QgsApplication, QgsStyle, QgsDataProvider, QgsMapLayer, QgsVectorLayer
+from qgis.core import Qgis, QgsProject, QgsApplication, QgsStyle, QgsDataProvider, QgsMapLayer, QgsVectorLayer, QgsProviderRegistry
 from qgis.gui import (QgsGui,
                       QgsRendererPropertiesDialog,
                       QgsAbstractDataSourceWidget,
@@ -184,7 +184,7 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
         
         self.tvwInspectorLimits.horizontalHeader().setStretchLastSection(True)
         
-        self.tvwInspectorLimits.setEditTriggers(QAbstractItemView.AllEditTriggers)
+        self.tvwInspectorLimits.setEditTriggers(QAbstractItemView.EditTrigger.AllEditTriggers)
         
         self.tvwInspectorLimits.setItemDelegateForColumn(1, LimitDelegate(self))
         
@@ -211,7 +211,7 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
         
         self.tvwObservationInspectorLimits.horizontalHeader().setStretchLastSection(True)
         
-        self.tvwObservationInspectorLimits.setEditTriggers(QAbstractItemView.AllEditTriggers)
+        self.tvwObservationInspectorLimits.setEditTriggers(QAbstractItemView.EditTrigger.AllEditTriggers)
         
         self.tvwObservationInspectorLimits.setItemDelegateForColumn(1, LimitDelegate(self))
         
@@ -325,7 +325,7 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
         
     def addVectorLayer(self, vectorLayerPath: str, layerName: str, providerKey: str):
         """Adds a vector layer to the current project"""
-        logger.setOverrideCursor(Qt.WaitCursor)
+        logger.setOverrideCursor(Qt.CursorShape.WaitCursor)
         
         #_ = iface.addVectorLayer(vectorLayerPath, layerName, providerKey)
         
@@ -362,7 +362,7 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
                 return
             
             # Apply  style
-            logger.setOverrideCursor(Qt.WaitCursor)
+            logger.setOverrideCursor(Qt.CursorShape.WaitCursor)
                
             LayerUtils.set_visibility([self.getLayer()], show=True)
                 
@@ -511,12 +511,12 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
         """ Filter widget events"""
         if isinstance( source, QgsAbstractDataSourceWidget ):
             
-            if event.type() == QEvent.Close:
+            if event.type() == QEvent.Type.Close:
                 event.ignore()
                 return True
             
-            elif event.type() == QEvent.KeyPress:
-                if event.key() == Qt.Key_Escape:
+            elif event.type() == QEvent.Type.KeyPress:
+                if event.key() == Qt.Key.Key_Escape:
                     return True
                 
             return False
@@ -563,12 +563,16 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
         layer = self.getLayer()
         
         self.source_selector = QgsGui.sourceSelectProviderRegistry().createSelectionWidget(
-            __SENSORTHINGS_PROVIDER_NAME__, self, Qt.Widget, 0)
+            __SENSORTHINGS_PROVIDER_NAME__,
+            self,
+            Qt.WindowType.Widget,
+            QgsProviderRegistry.WidgetMode.Standalone,
+        )
          
         
         buttonBox = self.source_selector.findChild(QtWidgets.QDialogButtonBox)
         if buttonBox is not None:
-            closeButton = buttonBox.button(QtWidgets.QDialogButtonBox.Close)
+            closeButton = buttonBox.button(QtWidgets.QDialogButtonBox.StandardButton.Close)
             if closeButton is not None:
                 #closeButton.setEnabled(False)
                 buttonBox.removeButton(closeButton)
@@ -598,7 +602,7 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
             self.pnlSourceWidget.layout().insertWidget(0, self.source_widget)
             
             if buttonBox is not None:
-                back_button = buttonBox.addButton(self.tr("Back"), QtWidgets.QDialogButtonBox.ApplyRole)
+                back_button = buttonBox.addButton(self.tr("Back"), QtWidgets.QDialogButtonBox.ButtonRole.ApplyRole)
                 back_button.setStyleSheet("font: bold;")
                 back_button.clicked.connect(lambda checked, self=self: self.stackedWdSource.setCurrentIndex(1))
             
@@ -715,7 +719,7 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
         hasDateTimeFields = False
         
         for field in layer.fields():
-            if field.type() == QMetaType.QDateTime:
+            if field.type() == QMetaType.Type.QDateTime:
                 hasDateTimeFields = True
                 break
         
@@ -747,7 +751,7 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
         
     
     def showTemporalControlWidget(self, show: bool = True):  
-        """Show\Hide canvas temporal control widget"""
+        """Show/Hide canvas temporal control widget"""
         
         # Check if valid temporal control
         temporal_control = iface.mapCanvas().temporalController()   
