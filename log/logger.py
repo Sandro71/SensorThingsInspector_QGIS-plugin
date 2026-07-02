@@ -19,9 +19,9 @@ import time
 from qgis.utils import iface
 from qgis.core import Qgis, QgsMessageLog, QgsApplication
 from qgis.PyQt.QtWidgets import QProgressBar
-from PyQt5.QtCore import Qt, QEventLoop
-from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QMessageBox, QTextBrowser
+from qgis.PyQt.QtCore import Qt, QEventLoop
+from qgis.PyQt.QtGui import QIcon
+from qgis.PyQt.QtWidgets import QMessageBox, QTextBrowser
 
 class debugTimer:
     
@@ -75,10 +75,10 @@ class QgisLogger:
     
     
     @staticmethod
-    def setOverrideCursor(cursor=Qt.WaitCursor):
+    def setOverrideCursor(cursor=Qt.CursorShape.WaitCursor):
         """ Sets override application cursor """
         QgsApplication.setOverrideCursor(cursor)
-        QgsApplication.processEvents(QEventLoop.ExcludeUserInputEvents)
+        QgsApplication.processEvents(QEventLoop.ProcessEventsFlag.ExcludeUserInputEvents)
         
          
     @staticmethod
@@ -86,7 +86,7 @@ class QgisLogger:
         """ Restores override application cursor """
         if QgsApplication.overrideCursor():
             QgsApplication.restoreOverrideCursor()
-            QgsApplication.processEvents(QEventLoop.ExcludeUserInputEvents)
+            QgsApplication.processEvents(QEventLoop.ProcessEventsFlag.ExcludeUserInputEvents)
     
     
     @staticmethod
@@ -118,7 +118,7 @@ class QgisLogger:
             
     
     @staticmethod
-    def htmlMsgbox(level, msg, title=None, tag=None, standardButtons=QMessageBox.NoButton):
+    def htmlMsgbox(level, msg, title=None, tag=None, standardButtons=QMessageBox.StandardButton.NoButton):
         if msg is None: msg = '???'
         if tag is None: tag = QgisLogger.name
         if title is not None: tag = "{0}: {1}".format(tag, title)
@@ -126,26 +126,26 @@ class QgisLogger:
       
         QgisLogger.restoreOverrideCursor()
         
-        icon = QMessageBox.NoIcon
+        icon = QMessageBox.Icon.NoIcon
         if level == Qgis.Critical:
-            icon = QMessageBox.Critical     
+            icon = QMessageBox.Icon.Critical     
         elif level == Qgis.Warning:
-            icon = QMessageBox.Warning   
+            icon = QMessageBox.Icon.Warning   
         else:
-            icon = QMessageBox.Information
+            icon = QMessageBox.Icon.Information
         
         msgBox = QMessageBox( iface.mainWindow() )
         msgBox.setWindowTitle( tag )
         msgBox.setIcon( icon )
-        msgBox.setTextFormat( Qt.RichText )
+        msgBox.setTextFormat( Qt.TextFormat.RichText )
         msgBox.setText( msg )
-        if standardButtons == QMessageBox.NoButton:
-            msgBox.setStandardButtons(QMessageBox.Ok)
-            msgBox.setDefaultButton(QMessageBox.Ok)
-            msgBox.setEscapeButton(QMessageBox.Ok)
+        if standardButtons == QMessageBox.StandardButton.NoButton:
+            msgBox.setStandardButtons(QMessageBox.StandardButton.Ok)
+            msgBox.setDefaultButton(QMessageBox.StandardButton.Ok)
+            msgBox.setEscapeButton(QMessageBox.StandardButton.Ok)
         else:
             msgBox.setStandardButtons( standardButtons )
-        return msgBox.exec_()
+        return msgBox.exec()
             
     
     @staticmethod
@@ -259,14 +259,14 @@ class QgisLogger:
         progress_message_bar = iface.messageBar().createMessage(title, msg)
         if not only_message:
             progress_bar = QProgressBar()
-            progress_bar.setAlignment(Qt.AlignLeft|Qt.AlignVCenter) 
+            progress_bar.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter) 
             progress_bar.setRange(0,0) 
             progress_message_bar.layout().addWidget(progress_bar)
         iface.messageBar().pushWidget(progress_message_bar, level)
         progress_message_bar.repaint()
         
         # override cursor 
-        QgisLogger.setOverrideCursor(Qt.WaitCursor)
+        QgisLogger.setOverrideCursor(Qt.CursorShape.WaitCursor)
         
      
     @staticmethod

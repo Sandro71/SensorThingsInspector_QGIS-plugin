@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Module to show\identify a SensorThingsAPI Lacation.
+"""Module to show/identify a SensorThingsAPI Lacation.
 
 Description
 -----------
@@ -21,9 +21,10 @@ Author
 Members
 -------
 """
+import json
 
-# Qgis\PyQt5 modules
-from qgis.PyQt.QtCore import pyqtSlot, Qt, QUrl, QVariant
+# Qgis\PyQt modules
+from qgis.PyQt.QtCore import pyqtSlot, Qt, QUrl
 from qgis.PyQt.QtGui import QColor
 from qgis.PyQt import QtWidgets
 
@@ -45,19 +46,18 @@ from SensorThingsAPI.sensor_things_browser import SensorThingsRequestError, WebE
 class SensorThingsLocationDialog(WebEngineDialog):
     """Dialog to show Location info"""
     
-    def __init__(self, plugin, parent=None, flags=Qt.WindowFlags()):
+    def __init__(self, plugin, parent=None):
         """Constructor
         
         :param parent: 
         :type parent: QtWidgets
         """
         # init
-        super().__init__(parent, flags)
+        super().__init__(parent)
         QgsGui.enableAutoGeometryRestore(self)
         
         self.plugin = plugin
         self.page_data = {}
-        self.replyPromise = None
         self._lay_id = None
         self._feat_id = None
         self._fids = []
@@ -66,22 +66,18 @@ class SensorThingsLocationDialog(WebEngineDialog):
         self._st_load_tasks = []
         self._dataSourceUri = QgsDataSourceUri()
         
-        # setting the minimum size
-        self.setMinimumSize(900, 500)
-        
-        # add widgets
-        ###############################################self.setLayout(QtWidgets.QGridLayout())
-        ###############################################self.layout().setContentsMargins(0, 0, 0, 0)
-        
-        self.webView = self ###########################SensorThingsWebView(parent=self)
-        ###############################################self.webView.injectPyToJs(self, 'pyjsapi')
-        ###############################################self.layout().addWidget(self.webView)
-        
-        self.osservazDlg = SensorThingsObservationDialog(self.plugin, parent=self)
+        self._osservazDlg = None
         
         # settings
         self.setWindowTitle(self.tr("Location"))
         
+    def _get_observation_dialog(self):
+        if self._osservazDlg is None:
+            self._osservazDlg = SensorThingsObservationDialog(
+                self.plugin, parent=iface.mainWindow()
+            )
+        return self._osservazDlg
+
     
     
     def closeEvent(self, _):
@@ -91,7 +87,8 @@ class SensorThingsLocationDialog(WebEngineDialog):
         logger.restoreOverrideCursor()
         
         # close Observations dialog
-        self.osservazDlg.close()
+        if self._osservazDlg is not None:
+            self._osservazDlg.close()
         
         # remove rubber band
         self._removeRubberBand()
@@ -141,7 +138,7 @@ class SensorThingsLocationDialog(WebEngineDialog):
                     })
                     
             # hide Osservazioni dialog
-            self.osservazDlg.hide()
+            self._get_observation_dialog().hide()
             
             # show wait cursor
             logger.setOverrideCursor()
@@ -189,7 +186,11 @@ class SensorThingsLocationDialog(WebEngineDialog):
             
             url = SensorThingLayerUtils.getUrl(layer)
             
-            self._st_load_task = self.getRequest(url=url, entity=sta_entity, featureLimit=featureLimit, expandTo=None, sql="id eq {}".format(SensorThingLayerUtils.quoteValue(location_id)), prefix_attribs=None)
+            self._st_load_task = self._create_load_task(
+                url=url, entity=sta_entity, featureLimit=featureLimit,
+                expandTo=None, sql="id eq {}".format(SensorThingLayerUtils.quoteValue(location_id)),
+                prefix_attribs=None,
+            )
             self._st_load_task.dataLoaded.connect(self._location_callback)
             self._st_load_task.get()
             
@@ -259,7 +260,7 @@ class SensorThingsLocationDialog(WebEngineDialog):
             # load HTL document 
             template_name = 'location.html'
             template = htmlUtil.generateTemplate(template_name)
-            self.webView.setHtml(template.render(self.page_data), htmlUtil.getBaseUrl())
+            self.setHtml(template.render(self.page_data), htmlUtil.getBaseUrl())
         
             # show dialog 
             QtWidgets.QDialog.show(self)
@@ -302,17 +303,27 @@ class SensorThingsLocationDialog(WebEngineDialog):
             
             if sta_entity == 'Location':
                 expandTo = "Thing:limit={}".format(thingLimit)
-                self._st_load_task = self.getRequest(url=load_task.getUrl(), entity='Location', featureLimit=featureLimit, expandTo=expandTo, sql=load_task.getFilter(), prefix_attribs='Thing_')
+                self._st_load_task = self._create_load_task(
+                    url=load_task.getUrl(), entity='Location', featureLimit=featureLimit,
+                    expandTo=expandTo, sql=load_task.getFilter(), prefix_attribs='Thing_',
+                )
             
             elif sta_entity == 'FeatureOfInterest':
                 observationLimit = self.getLimit('observationLimit')
                 datastreamLimit = self.getLimit('datastreamLimit')
                 expandTo = "Observation:limit={};Datastream:limit={};Thing:limit={}".format(observationLimit, datastreamLimit, thingLimit)
                 
-                self._st_load_task = self.getRequest(url=load_task.getUrl(), entity='FeatureOfInterest', featureLimit=featureLimit, expandTo=expandTo, sql=load_task.getFilter(), prefix_attribs='Observation_Datastream_Thing_')
+                self._st_load_task = self._create_load_task(
+                    url=load_task.getUrl(), entity='FeatureOfInterest', featureLimit=featureLimit,
+                    expandTo=expandTo, sql=load_task.getFilter(),
+                    prefix_attribs='Observation_Datastream_Thing_',
+                )
             
             elif sta_entity == 'Datastream' or sta_entity == 'MultiDatastream':
-                self._st_load_task = self.getRequest(url=load_task.getUrl(), entity=sta_entity, featureLimit=featureLimit, expandTo=expandTo, sql=load_task.getFilter(), prefix_attribs='Thing_')
+                self._st_load_task = self._create_load_task(
+                    url=load_task.getUrl(), entity=sta_entity, featureLimit=featureLimit,
+                    expandTo=expandTo, sql=load_task.getFilter(), prefix_attribs='Thing_',
+                )
             
             else:
                 raise ValueError("{}: {}".format(self.tr("Invalid SensorThings entity"), sta_entity))
@@ -405,26 +416,23 @@ class SensorThingsLocationDialog(WebEngineDialog):
             self._rubberBand = None
     
     
-    @pyqtSlot(result=QVariant)
-    def getPageData(self):
-        """Injected method to get page data"""
-        return self.page_data
-    
-    @pyqtSlot(str, result=QVariant)
+    @pyqtSlot(str, result=str)
     def getThingData(self, thing_id):
-        """Injected method to get thing data"""
-        try:        
-            # Get thing data
-            things_data = self.page_data.get('things', {})
-            thing_data = next((i for i in things_data if str(i['@iot.id']) == str(thing_id)), None)
+        """Injected method to get thing data as JSON."""
+        try:
+            things_data = self.page_data.get('things', [])
+            thing_data = next(
+                (i for i in things_data if str(i.get('@iot.id')) == str(thing_id)),
+                None,
+            )
             if not thing_data:
                 raise ValueError(self.tr("Invalid Thing ID"))
-            return thing_data
-        
+            return SensorThingLoadDataTask.page_data_to_json(thing_data)
+
         except Exception as ex:
             self.logError(str(ex))
-            return {}
-    
+            return '{}'
+
     @pyqtSlot(str, result=int)
     def getLimit(self, name):
         return self.plugin.main_panel.getLimit(name)
@@ -433,55 +441,28 @@ class SensorThingsLocationDialog(WebEngineDialog):
     def getObservationLimit(self, name):
         return self.plugin.main_panel.getObservationLimit(name)
     
-    @pyqtSlot(str, str, int, str, str, str, result=QVariant)
-    def getRequest(self, url, entity, featureLimit, expandTo, sql, prefix_attribs):
-        """Injected method to return a new request to get data asynchronously"""
+    @pyqtSlot(str, str)
+    def loadObservationsData(self, ds_row_json, options_json):
+        """Show the observations dialog (JSON args for Qt6 WebChannel)."""
         try:
-            
-            # Compose uri for query layer
-            uri = SensorThingLayerUtils.createDataSourceUri(
-                self._dataSourceUri, url, entity, featureLimit, expandTo, sql
-            )
-            
-            # Create load data task
-            request = SensorThingLoadDataTask(uri, prefix_attribs=prefix_attribs, rename_attribs={'id':'@iot.id', 'selfLink':'@iot.selfLink'})
-            
-            request.rejected.connect(self.rejectRequest)
-            
-            self._st_load_tasks.append(request)
-            
-            return request 
-            
-        except Exception as ex:
-            self.logError(str(ex))
-            return None        
-            
-    @pyqtSlot(QVariant, QVariant)
-    def loadObservationsData(self, ds_row, options):
-        """Show a new Osservazioni dialog"""
-        try:
-            # check if visible 
             if not self.isVisible():
                 return
-            
-            # init
-            self.osservazDlg.hide()
-            ds_row = ds_row or {}
-            options = options or {}
+
+            ds_row = json.loads(ds_row_json) if ds_row_json else {}
+            options = json.loads(options_json) if options_json else {}
+
+            self._get_observation_dialog().hide()
             date_filter = options.get('filterTime', '')
             query_params = options.get('queryParams', '')
             is_multidatastream = bool(options.get('isMultidatastream', False))
-                    
-            # Request Osservazioni data
+
             self.page_data['selectRow'] = ds_row
             self.page_data['filterTime'] = date_filter
             self.page_data['queryParams'] = query_params
             self.page_data['isMultidataStream'] = is_multidatastream
-            
-            # create a new Osservazioni dialog
-            self.osservazDlg.show(self.page_data, self._dataSourceUri)
-            
-            
+
+            self._get_observation_dialog().show(self.page_data, self._dataSourceUri)
+
         except Exception as ex:
             self.logError(
                 "{}: {}".format(self.tr("Loading Observations data"), str(ex)))

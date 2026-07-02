@@ -30,8 +30,8 @@ Members
 from jinja2 import Environment, FileSystemLoader
 import os
  
-from PyQt5.QtCore import QUrl, QByteArray, QBuffer 
-from PyQt5.QtGui import QPixmap, QImage 
+from qgis.PyQt.QtCore import QUrl, QByteArray, QBuffer
+from qgis.PyQt.QtGui import QPixmap, QImage 
  
 # 
 #-----------------------------------------------------------

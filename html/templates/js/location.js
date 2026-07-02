@@ -21,7 +21,7 @@ $(document).ready(function() {
 		
 		pyjsapi = channel.objects.pyjsapi;
 		
-		var pageData = await pyjsapi.getPageData() || {};
+		var pageData = parsePageData(await unwrapChannel(pyjsapi.getPageData()));
 		var localizer = SensorThingsLocales.getLocalizer( pageData['locale'] );
 		
 		/***********************************************
@@ -36,12 +36,12 @@ $(document).ready(function() {
 		
 			/* initial vars */
 			var thingId = $(this).attr("thing-id");
-			var thingData = await pyjsapi.getThingData(thingId);
+			var thingData = parsePageData(await unwrapChannel(pyjsapi.getThingData(thingId)));
 			var isMultidataStream = $(this).hasClass("frost-multidatastream");
 			
-			var dsLimit = await pyjsapi.getLimit('datastreamLimit');
+			var dsLimit = await unwrapChannel(pyjsapi.getLimit('datastreamLimit'));
 			
-			var featureLimit = await pyjsapi.getLimit('featureLimit');
+			var featureLimit = await unwrapChannel(pyjsapi.getLimit('featureLimit'));
 
 			/* hide mutidatastream table */
 			if (isMultidataStream) {
@@ -91,8 +91,7 @@ $(document).ready(function() {
 								// add url
 								row['url'] = url;
 								
-								// compose phenomenonTime attribute
-								row['phenomenonTime'] = ComposePhenomenonTime(row.phenomenonTimeStart, row.phenomenonTimeEnd);
+								row['phenomenonTime'] = resolvePhenomenonTime(row);
 								
 								// sensor promise
 								entFilter = "id eq " + quote(row['@iot.id']);
@@ -152,7 +151,7 @@ $(document).ready(function() {
 											.then(data => { 
 												data = data.length > 0 ? data[0] : {}
 												
-												row['phenomenonTime'] = ComposePhenomenonTime(data.phenomenonTimeStart, data.phenomenonTimeEnd);
+												row['phenomenonTime'] = resolvePhenomenonTime(data);
 											})
 											.catch(reason => {
 												console.error('Aggregation for property load data error: '+reason);
@@ -220,7 +219,9 @@ $(document).ready(function() {
 								}
 								return '<div style="white-space:pre-line">' + ar.join("\n") + '</div>';
 							}
-							return row.observedProperty.name + " - " + row.unitOfMeasurement.symbol;
+							return row.observedProperty.name + " - " + (
+								(row.unitOfMeasurement && row.unitOfMeasurement.symbol) || ''
+							);
 						},
 					},
 					{ 
@@ -238,7 +239,6 @@ $(document).ready(function() {
 						data: null, 
 						defaultContent: "",
 						render: function (data, type, row) {
-							// check if valid phenomenonTime
 							if (!!row.phenomenonTime) {
 								return '<button type="button" class="btn btn-default oss-img oss-button"></button>';
 							}
@@ -263,19 +263,20 @@ $(document).ready(function() {
 				$(this).blur()
 				var rowData = table.row($(this).parents('tr')).data();
 				if (!!rowData) {
-					// get data filter
+					var obsLimit = await unwrapChannel(
+						pyjsapi.getObservationLimit('observationLimit')
+					);
 					var dtFilterRange = new SensorThingsDateRange().parsePhenomenonTime(rowData['phenomenonTime']);
 					dtFilterRange = dtFilterRange.getFilterRangeByDelta(dtFilterRange.End, 0);
-					
-					// show spinner
-					//$("#spinner-div").show();
 
-					// show Observations data
-					await pyjsapi.loadObservationsData(rowData, {
-						"queryParams": dtFilterRange.getQueryParams(pyjsapi.getObservationLimit('observationLimit')),
-						"filterTime": dtFilterRange.toString(),
-						"isMultidatastream": isMultidataStream
-					});
+					await unwrapChannel(pyjsapi.loadObservationsData(
+						JSON.stringify(rowData),
+						JSON.stringify({
+							"queryParams": dtFilterRange.getQueryParams(obsLimit),
+							"filterTime": dtFilterRange.toString(),
+							"isMultidatastream": isMultidataStream
+						})
+					));
 				}
 			});
 		});
@@ -290,7 +291,7 @@ $(document).ready(function() {
 		
 		/* Location selector */
 		$('#location-selector').on('change', async function() {
-			await pyjsapi.changeLocation(this.value);
+			await unwrapChannel(pyjsapi.changeLocation(this.value));
 		});
 	
 	});

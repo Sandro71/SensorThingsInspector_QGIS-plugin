@@ -36,19 +36,22 @@ $(document).ready(function() {
 		
 		
 		/* Get page data */
-		var pageData = await pyjsapi.getPageData() || {};
+		var pageData = parsePageData(await unwrapChannel(pyjsapi.getPageData()));
 		var localizer = SensorThingsLocales.getLocalizer( pageData['locale'] );
 		var propData = pageData['selectRow'] || {};
 		var props = propData['observedProperty'] || [];
+		if (props && !Array.isArray(props)) {
+			props = [props];
+		}
 		var isMultidataStream = pageData['isMultidataStream'] || false;
 		var url = propData['url'] || '';
 		
-		var featureLimit = await pyjsapi.getLimit('featureLimit');
-		var observationLimit = await pyjsapi.getLimit('observationLimit');
+		var featureLimit = await unwrapChannel(pyjsapi.getLimit('featureLimit'));
+		var observationLimit = await unwrapChannel(pyjsapi.getLimit('observationLimit'));
 		
 		/* Get filter data range */
 		var phenomenonRange = new SensorThingsDateRange().parsePhenomenonTime(propData['phenomenonTime']);
-		var phenomenonRangeNorm = new SensorThingsDateRange().parsePhenomenonTime(propData['phenomenonTime']).normalize();
+		var phenomenonRangeNorm = phenomenonRange.normalize();
 		//var filterRange = new SensorThingsDateRange().parsePhenomenonTime(pageData['filterTime']);
 		
 		var strPhenomenonStartDate = $.datepicker.formatDate(
@@ -101,7 +104,7 @@ $(document).ready(function() {
 				oss_data = oss_data || [];
 				prop_data = prop_data || [];
 				
-				var pageData = await pyjsapi.getPageData() || {};
+				var pageData = parsePageData(await unwrapChannel(pyjsapi.getPageData()));
 				var chartOptions = pageData['chart_opts'] || {};
 				var line_color = chartOptions['line_color'] || '#32CD32';
 				var line_colors = chartOptions['line_colors'] || [];
@@ -452,7 +455,7 @@ $(document).ready(function() {
 						var rows = d || [];
 						rows.forEach(row => {
 							// compose phenomenonTime attribute
-							row['phenomenonTime'] = ComposePhenomenonTime(row.phenomenonTimeStart, row.phenomenonTimeEnd);
+							row['phenomenonTime'] = resolvePhenomenonTime(row);
 							
 							// correct results for multidatastreams
 							// thanks to Richard Duivenvoorde
@@ -612,18 +615,18 @@ $(document).ready(function() {
 			//$('#exportModal').hide();
 			
 			// export CSV
-			await pyjsapi.exportCSV(url, {		
+			await unwrapChannel(pyjsapi.exportCSV(url, JSON.stringify({
 				"fileName": fileName,
 				"exportFields": exportFields,
 				"openFile": $('#exportOpenFlag').is(":checked"),
 				"dateRange": dtFrmStart + ' - ' + dtFrmEnd,
-				
+
 				"query_entity": isMultidataStream ? 'MultiDatastream' : 'Datastream',
 				"query_featureLimit": 10000,
 				"query_expandTo": 'Observation:' + queryParams,
 				"query_prefix_attribs": 'Observation_',
 				"query_filter": "id eq " + quote(propData['@iot.id'])
-			});
+			})));
 		});
 		
 		/* On show modal */

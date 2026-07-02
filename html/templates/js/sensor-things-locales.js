@@ -138,14 +138,21 @@ SensorThingsLocales.prototype.formatPhenomenonTime = function (value) {
 		return this.translate("N.D.");
 	}
 	value = String(value);
+	var loc = (this.locale === 'it') ? 'it-IT' : ((this.locale === 'en') ? 'en-GB' : this.locale);
 	
 	// format date range
 	try {
 		var arOut = []
-		var dateArray = String(value).split("/");
+		var dateArray;
+		if (value.indexOf('T') >= 0) {
+			var idx = value.indexOf('/');
+			dateArray = (idx > 0) ? [value.substring(0, idx), value.substring(idx + 1)] : [value];
+		} else {
+			dateArray = value.split("/");
+		}
 		for (var i = 0; i < dateArray.length; i++) {
 		    var d = new Date(dateArray[i]);
-			var s = d.toLocaleString(this.locale, {
+			var s = d.toLocaleString(loc, {
 				day: "2-digit",    // numeric, 2-digit
 				year: "numeric",   // numeric, 2-digit
 				month: "short",    // numeric, 2-digit, long, short, narrow
@@ -169,6 +176,7 @@ SensorThingsLocales.prototype.formatCompactPhenomenonTimeAsArray = function (val
 	// init
 	value = String(value || "");
 	var arOut = [];
+	var loc = (this.locale === 'it') ? 'it-IT' : ((this.locale === 'en') ? 'en-GB' : this.locale);
 	
 	// check if cached
 	if (value == this.cached.dateRangeValue) {
@@ -176,12 +184,16 @@ SensorThingsLocales.prototype.formatCompactPhenomenonTimeAsArray = function (val
 		
 	} else {
 		try {
-			// split date range
-			var dateArray = String(value).split("/");
-			// format date array
+			var dateArray;
+			if (value.indexOf('T') >= 0) {
+				var idx = value.indexOf('/');
+				dateArray = (idx > 0) ? [value.substring(0, idx), value.substring(idx + 1)] : [value];
+			} else {
+				dateArray = value.split("/");
+			}
 			for (var i = 0; i < dateArray.length; i++) {
 			    var d = new Date(dateArray[i]);
-				var s = d.toLocaleString(this.locale, {
+				var s = d.toLocaleString(loc, {
 					day: "2-digit",
 					month: "2-digit",
 					year: "numeric",

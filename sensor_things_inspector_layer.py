@@ -21,11 +21,13 @@ Author
 Members
 -------
 """
-from PyQt5.QtCore import pyqtSignal, pyqtSlot, QVariant, QCoreApplication
+import json
 
-from qgis.core import QgsApplication, QgsDataSourceUri, QgsVectorLayer, QgsFeature, QgsTask
+from qgis.PyQt.QtCore import pyqtSignal, pyqtSlot, QCoreApplication
 
+from qgis.core import Qgis, QgsApplication, QgsDataSourceUri, QgsMessageLog, QgsVectorLayer, QgsFeature, QgsTask
 
+LOG_TAG = 'SensorThings'
 
 #: Constant for provider name  
 __SENSORTHINGS_PROVIDER_NAME__ = 'sensorthings'
@@ -36,7 +38,7 @@ class SensorThingLoadDataTask(QgsTask):
     """QGIS task to load data using SensorThings provider."""
 
     # signals 
-    resolved = pyqtSignal(QVariant)
+    resolved = pyqtSignal(list)
     rejected = pyqtSignal(str)
     dataLoaded = pyqtSignal(QgsTask)
 
@@ -92,30 +94,109 @@ class SensorThingLoadDataTask(QgsTask):
     def run(self):
         """Override running task method."""
         try:
-            # Init
             self.exception = None
             self.error_message = ''
-            
-            # Create query layer 
-            query_layer = SensorThingLayerUtils.createLayer("SensorThingLoadDataTask", self.uri)
-            
-            if not query_layer.isValid():
-                raise Exception(self.tr("Cannot create SensorThings query layer"))
-
-            # Loop features
-            for feature in query_layer.getFeatures():
-                attribs = feature.attributeMap()
-                self.data.append(self._renameKey(self._filter(attribs)))
-             
+            self.data = self.fetch_data(self.uri, self.prefix_attribs, self.rename_attribs)
             return True
-            
         except Exception as ex:
             self.exception = ex
             return False
-        
-        
+
+    @staticmethod
+    def fetch_data(ds_uri: QgsDataSourceUri, prefix_attribs: str = '', rename_attribs=None) -> list:
+        """Load SensorThings data synchronously for WebChannel requests."""
+        rename_attribs = rename_attribs or {'id': '@iot.id', 'selfLink': '@iot.selfLink'}
+        uri_str = ds_uri.uri(False)
+
+        query_layer = SensorThingLayerUtils.createLayer("SensorThingLoadDataTask", ds_uri)
+        if not query_layer.isValid():
+            err = ''
+            try:
+                layer_error = query_layer.error()
+                if layer_error:
+                    err = layer_error.message()
+            except Exception:
+                pass
+            msg = "{} ({})".format(
+                SensorThingLayerUtils.tr("Cannot create SensorThings query layer"),
+                err or uri_str,
+            )
+            QgsMessageLog.logMessage(msg, LOG_TAG, Qgis.Critical)
+            raise Exception(msg)
+
+        data = []
+        for feature in query_layer.getFeatures():
+            attribs = {
+                str(k): SensorThingLoadDataTask._normalize_value(v)
+                for k, v in feature.attributeMap().items()
+            }
+            attribs = SensorThingLoadDataTask._filter_attribs(attribs, prefix_attribs)
+            row = SensorThingLoadDataTask._rename_attribs(attribs, rename_attribs)
+            data.append(row)
+
+        return data
+
+    @staticmethod
+    def _qt_value_to_iso(value):
+        """Convert Qt date/time values to ISO strings for JSON and JavaScript."""
+        try:
+            from qgis.PyQt.QtCore import QDate, QDateTime, Qt
+            if isinstance(value, QDateTime):
+                return value.toString(Qt.DateFormat.ISODateWithMs) if value.isValid() else None
+            if isinstance(value, QDate):
+                return value.toString(Qt.DateFormat.ISODate) if value.isValid() else None
+        except (ImportError, AttributeError, TypeError):
+            pass
+        return None
+
+    @staticmethod
+    def _normalize_value(value):
+        if value is None:
+            return None
+        try:
+            from qgis.PyQt.QtCore import QVariant
+            if isinstance(value, QVariant):
+                if value.isNull():
+                    return None
+                return SensorThingLoadDataTask._normalize_value(value.value())
+        except (ImportError, AttributeError, TypeError):
+            pass
+        if hasattr(value, 'isNull') and callable(value.isNull) and value.isNull():
+            return None
+        qt_iso = SensorThingLoadDataTask._qt_value_to_iso(value)
+        if qt_iso is not None:
+            return qt_iso
+        if isinstance(value, (bool, int, float)):
+            return value
+        if isinstance(value, str):
+            text = value.strip()
+            if text.startswith('{') or text.startswith('['):
+                try:
+                    return SensorThingLoadDataTask._normalize_value(json.loads(text))
+                except (ValueError, TypeError):
+                    pass
+            return value
+        if isinstance(value, dict):
+            return {
+                str(k): SensorThingLoadDataTask._normalize_value(v)
+                for k, v in value.items()
+            }
+        if isinstance(value, (list, tuple)):
+            return [SensorThingLoadDataTask._normalize_value(v) for v in value]
+        if hasattr(value, 'isoformat'):
+            return value.isoformat()
+        return str(value)
+
+    @staticmethod
+    def page_data_to_json(page_data) -> str:
+        return json.dumps(SensorThingLoadDataTask._normalize_value(page_data) or {})
+
+    @staticmethod
+    def as_json_string(records):
+        return json.dumps(records or [])
+
     def finished(self, result: bool):
-        """Override finished task method: send resolved\rejected events."""
+        """Override finished task method: send resolved/rejected events."""
         
         # if task cancelled silently, does nothing
         if self._silent_cancel:
@@ -155,29 +236,28 @@ class SensorThingLoadDataTask(QgsTask):
         self.cancel()
     
     
-    def _filter(self, rec: dict):
-        """Filter attributes using parameter passed in object creation."""
-        if not self.prefix_attribs:
-            return rec
-        
-        start_pos= len(self.prefix_attribs)
-        
+    @staticmethod
+    def _filter_attribs(rec: dict, prefix_attribs: str):
+        if not prefix_attribs:
+            return dict(rec)
+
+        start_pos = len(prefix_attribs)
         filtered_rec = {}
-        
+
         for k, v in rec.items():
-            if k.startswith(self.prefix_attribs):
-                key = k[start_pos:]
-                filtered_rec[key] = v
-                
+            key = str(k)
+            if key.startswith(prefix_attribs):
+                filtered_rec[key[start_pos:]] = v
+
         return filtered_rec
-        
-    
-    def _renameKey(self, rec: dict):
-        """Rename attributes using mapping parameter passed in object creation."""
-        if self.rename_attribs and type(rec) is dict:
-            for oldkey, newKey in self.rename_attribs.items():
+
+    @staticmethod
+    def _rename_attribs(rec: dict, rename_attribs: dict):
+        rec = dict(rec)
+        if rename_attribs and isinstance(rec, dict):
+            for oldkey, newKey in rename_attribs.items():
                 if oldkey in rec:
-                    rec[newKey] = rec.pop(oldkey) 
+                    rec[newKey] = rec.pop(oldkey)
         return rec
 
 
@@ -206,7 +286,7 @@ class SensorThingLayerUtils:
         return rf"'{value}'" if isinstance(value, str) else value
 
     @staticmethod
-    def getFeatureAttribute(feature: QgsFeature, attribute_name: str) -> QVariant:
+    def getFeatureAttribute(feature: QgsFeature, attribute_name: str):
         """Returns a feature attribute value"""
         attribute_name = attribute_name or ''
         

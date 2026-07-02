@@ -39,8 +39,9 @@ class FeatureSelectionTool(QgsMapToolIdentifyFeature):
         pass # disable escape key event to prevent loosing maptool
         
     def canvasReleaseEvent(self, mouseEvent):
+        pixel = mouseEvent.originalPixelPoint()
         results = self.identify(
-            mouseEvent.x(), mouseEvent.y(), self.TopDownStopAtFirst, [], self.VectorLayer)
+            pixel.x(), pixel.y(), self.TopDownStopAtFirst, [], self.VectorLayer)
         if len(results) > 0:
             res = results[0]
             features = []

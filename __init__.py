@@ -27,12 +27,16 @@
 #: Constant name of plugin
 __QGIS_PLUGIN_NAME__ = 'SensorThingsInspector'
 
-#: Constant to enable debug messages in plugin log.
-__PLG_DEBUG__ = False
-
 #: Global instance of configuration class
 plgConfig = None
 
+import os
+
+# Reduce WebEngine GPU crashes when embedded in QGIS (Qt6).
+os.environ.setdefault(
+    'QTWEBENGINE_CHROMIUM_FLAGS',
+    '--disable-gpu --disable-gpu-compositing',
+)
 
 
 # noinspection PyPep8Naming

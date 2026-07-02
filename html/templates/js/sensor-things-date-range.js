@@ -6,9 +6,25 @@
  */
 
 function ComposePhenomenonTime(phenomenonTimeStart, phenomenonTimeEnd) {
-    phenomenonTimeStart = !!phenomenonTimeStart ? phenomenonTimeStart : '';
-    phenomenonTimeEnd = !!phenomenonTimeEnd ? phenomenonTimeEnd : '';
-    return (!phenomenonTimeStart || !phenomenonTimeEnd) ? null : '' + phenomenonTimeStart + '/' + phenomenonTimeEnd;
+    phenomenonTimeStart = phenomenonTimeStart ? String(phenomenonTimeStart).trim() : '';
+    phenomenonTimeEnd = phenomenonTimeEnd ? String(phenomenonTimeEnd).trim() : '';
+    if (!phenomenonTimeStart || !phenomenonTimeEnd) {
+        return null;
+    }
+    return phenomenonTimeStart + '/' + phenomenonTimeEnd;
+}
+
+function resolvePhenomenonTime(row) {
+    if (!row) {
+        return null;
+    }
+    if (row.phenomenonTime) {
+        var combined = String(row.phenomenonTime).trim();
+        if (combined) {
+            return combined;
+        }
+    }
+    return ComposePhenomenonTime(row.phenomenonTimeStart, row.phenomenonTimeEnd);
 }
 
 /**
@@ -67,8 +83,17 @@ class SensorThingsDateRange {
 	}
 	
 	parsePhenomenonTime(value) {
-		var dates = String(value).split("/");
-		dates.push(dates[0]);
+		var text = String(value || '');
+		var dates;
+		if (text.indexOf('T') >= 0) {
+			var idx = text.indexOf('/');
+			dates = (idx > 0) ? [text.substring(0, idx), text.substring(idx + 1)] : [text];
+		} else {
+			dates = text.split("/");
+		}
+		if (dates.length < 2) {
+			dates.push(dates[0]);
+		}
 		this.setDates(dates[0], dates[1]);
 		return this;
 	}
@@ -76,9 +101,9 @@ class SensorThingsDateRange {
 	correctUtcDate(date, hh, mm, ss, ms) {
 		try {
 			var date = new Date(date);
-			var day = date.toLocaleString('it', { day: "2-digit" });
-			var month = date.toLocaleString('it', { month: "2-digit" });
-			var year = date.toLocaleString('it', { year: "numeric" });
+			var day = date.toLocaleString('it-IT', { day: "2-digit" });
+			var month = date.toLocaleString('it-IT', { month: "2-digit" });
+			var year = date.toLocaleString('it-IT', { year: "numeric" });
 			return new Date( parseInt(year), parseInt(month)-1, parseInt(day), hh, mm, ss, ms );
 			
 		} catch (error) {

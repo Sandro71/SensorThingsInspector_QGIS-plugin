@@ -4,9 +4,9 @@ Created on 25 nov 2024
 @author: MRTSDR71E
 '''
 
-from PyQt5.QtCore import Qt, QAbstractTableModel
-from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QStyledItemDelegate, QSpinBox
+from qgis.PyQt.QtCore import Qt, QAbstractTableModel
+from qgis.PyQt.QtGui import QFont
+from qgis.PyQt.QtWidgets import QStyledItemDelegate, QSpinBox
 
 # 
 #-----------------------------------------------------------
@@ -15,7 +15,7 @@ class LimitDelegate(QStyledItemDelegate):
         super().initStyleOption(option, index)
         val = index.data()
         option.text = str(val)
-        option.displayAlignment = Qt.AlignVCenter | Qt.AlignRight
+        option.displayAlignment = Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignRight
 
     def createEditor(self, parent, option, index):
         editor = QSpinBox(parent)
@@ -81,18 +81,18 @@ class InspectorLimitModel(QAbstractTableModel):
         
     def flags(self, index):
         if not index.isValid():
-            return Qt.ItemIsEnabled
+            return Qt.ItemFlag.ItemIsEnabled
             
         if index.column() != 1:
-            return Qt.ItemIsEnabled
+            return Qt.ItemFlag.ItemIsEnabled
             
         # add editable flag
-        return super().flags(index) | Qt.ItemIsEditable
+        return super().flags(index) | Qt.ItemFlag.ItemIsEditable
 
     def headerData(self, col, orientation, role):
-        if orientation == Qt.Horizontal:
+        if orientation == Qt.Orientation.Horizontal:
             # column header text
-            if role == Qt.DisplayRole:
+            if role == Qt.ItemDataRole.DisplayRole:
                 if col == 0:
                     return self.tr("Entity")
                 elif col == 1:
@@ -103,7 +103,7 @@ class InspectorLimitModel(QAbstractTableModel):
                     return ''
 
     def data(self, index, role):
-        if role == Qt.DisplayRole:
+        if role == Qt.ItemDataRole.DisplayRole:
             # See below for the nested-list data structure.
             # .row() indexes into the outer list,
             # .column() indexes into the sub-list
@@ -112,22 +112,22 @@ class InspectorLimitModel(QAbstractTableModel):
                 return rec.get('DisplayName', rec.get('Name'))
             return list(rec.values())[index.column()]
             
-        elif role == Qt.EditRole:
+        elif role == Qt.ItemDataRole.EditRole:
             self._editing = True
             rec = self._data[index.row()]
             return list(rec.values())[index.column()]
             
-        elif role == Qt.FontRole:
+        elif role == Qt.ItemDataRole.FontRole:
             if index.column() == 0:
                 font = QFont()
                 font.setBold(True)
                 return font
                 
-        elif role == Qt.TextAlignmentRole:
+        elif role == Qt.ItemDataRole.TextAlignmentRole:
             if index.column() == 1:
-                return Qt.AlignRight | Qt.AlignVCenter
+                return Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
         
-        elif role == Qt.ToolTipRole:
+        elif role == Qt.ItemDataRole.ToolTipRole:
             if index.column() == 2:
                 rec = self._data[index.row()]
                 return list(rec.values())[index.column()]
@@ -135,12 +135,11 @@ class InspectorLimitModel(QAbstractTableModel):
         return None
         
     def setData(self, index, value, role):
-        if role == Qt.EditRole:
+        if role == Qt.ItemDataRole.EditRole:
             # Set parameter value
             if index.column() == 1:
                 rec = self._data[index.row()]
                 rec['Value'] = value
                 return True
         return False
-
 

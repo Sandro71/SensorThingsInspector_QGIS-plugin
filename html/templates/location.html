@@ -4,7 +4,7 @@
 <title>Location</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!--<base href="{{ base_folder }}">-->
+<base href="{{ base_folder }}">
 
 <!-- Fontawesome -->
 <link rel="stylesheet" href="./fontawesome/css/font-awesome.min.css">
@@ -124,7 +124,7 @@
 		    	<span data-langkey="DataStreamTitle">Available observations</span>
 		    </div>
 		  	<table class="frost-stream table-bordered table-hover _nowrap table-striped" 
-			       thing-id={{thing['@iot.id']}}>
+			       thing-id="{{ thing['@iot.id'] }}">
 			</table>
 		</div>
 		
@@ -134,7 +134,7 @@
 				<span data-langkey="MultiDataStreamTitle">Complex time series</span>
 			</div>
 		  	<table class="frost-stream frost-multidatastream table-bordered table-hover _nowrap table-striped" 
-			       thing-id={{thing['@iot.id']}}>
+			       thing-id="{{ thing['@iot.id'] }}">
 			</table>
 		</div>
 	    
