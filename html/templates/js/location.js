@@ -94,6 +94,17 @@ $(document).ready(function() {
 								// compose phenomenonTime attribute
 								row['phenomenonTime'] = ComposePhenomenonTime(row.phenomenonTimeStart, row.phenomenonTimeEnd);
 								
+								row['phenomenonTimeText'] = ComposePhenomenonTime(row.phenomenonTimeStart, row.phenomenonTimeEnd);
+								
+								if (!row['phenomenonTime'])
+								{
+									var startDate = new Date(0).toISOString();
+									
+									var endDate = new Date().toISOString();
+									
+									row['phenomenonTime'] = ComposePhenomenonTime(startDate, endDate);
+								}
+								
 								// sensor promise
 								entFilter = "id eq " + quote(row['@iot.id']);
 							
@@ -198,7 +209,7 @@ $(document).ready(function() {
 						data: "phenomenonTime", 
 						defaultContent: "",
 						render: function(data, type, row) {
-							return localizer.formatPhenomenonTime(row.phenomenonTime);
+							return localizer.formatPhenomenonTime(row.phenomenonTimeText);
 						},
 					},
 					{ 
@@ -239,9 +250,9 @@ $(document).ready(function() {
 						defaultContent: "",
 						render: function (data, type, row) {
 							// check if valid phenomenonTime
-							if (!!row.phenomenonTime) {
+							//if (!!row.phenomenonTime) {
 								return '<button type="button" class="btn btn-default oss-img oss-button"></button>';
-							}
+							//}
 							return '';
 						}
 					}
