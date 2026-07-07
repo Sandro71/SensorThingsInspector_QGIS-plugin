@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Module to show\identify a SensorThingsAPI Lacation.
+"""Module to show/identify a SensorThingsAPI Lacation.
 
 Description
 -----------
