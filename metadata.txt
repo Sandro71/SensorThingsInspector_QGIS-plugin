@@ -11,6 +11,10 @@ author=Deda Next (Sandro Moretti)
 email=sandro.moretti@dedagroup.it
 
 about=This plugin has been developed by Sandro Moretti for Deda Next (https://www.dedanext.it/) within the AIR-BREAK project (https://airbreakferrara.net/) and then further evolved into the current version with the financial support of BRGM (https://www.brgm.fr/en). The plugin leverages on QGIS SensorThings data provider to access SensorThingsAPI endpoints (https://www.ogc.org/standards/sensorthings), visualize on map the position of their spatially-enabled entities (Locations, Multi/Datastreams and FeatureOfInterest) and inspect the related timeseries of Observations.
+      
+	  The plug-in requires the following modules to work properly: qml-module-qtwebengine, qml-module-qtwebchannel; install missing modules if not exist, for example on Debian-based Linux operating systems, such as Ubuntu, use:
+    	  
+		  sudo apt install qml-module-qtwebengine qml-module-qtwebchannel. 
 
 
 tracker=https://github.com/Sandro71/SensorThingsInspector_QGIS-plugin/issues
