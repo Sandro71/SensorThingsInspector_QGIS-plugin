@@ -283,7 +283,7 @@ $(document).ready(function() {
 
 					// show Observations data
 					await pyjsapi.loadObservationsData(rowData, {
-						"queryParams": dtFilterRange.getQueryParams(pyjsapi.getObservationLimit('observationLimit')),
+						"queryParams": dtFilterRange.getQueryParams(await pyjsapi.getObservationLimit('observationLimit')),
 						"filterTime": dtFilterRange.toString(),
 						"isMultidatastream": isMultidataStream
 					});

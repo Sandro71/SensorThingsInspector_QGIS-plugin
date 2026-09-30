@@ -149,8 +149,8 @@ class WebEngineDialog(QDialog):
         
         try:
             self._dlgInspector.close()
-        except:
-            pass
+        except Exception as ex:
+            print(ex)
             
         self._dlgInspector = WebEngineInspectorDialog(parent=dialog)
         self._dlgInspector.show() 

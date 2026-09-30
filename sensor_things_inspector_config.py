@@ -54,7 +54,7 @@ class SensorThingsInspectorConfig(QObject):
         
         # load yaml file
         with open(cfg_file, 'r') as stream:
-            self.__config = yaml.load( stream, Loader=yaml.loader.Loader )
+            self.__config = yaml.safe_load(stream)
         
         # set internal members
         self.__config_file = cfg_file

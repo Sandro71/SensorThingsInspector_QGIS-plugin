@@ -22,7 +22,7 @@ Members
 -------
 """
 
-# Qgis\PyQt5 modules
+# Qgis/PyQt5 modules
 from qgis.PyQt.QtCore import pyqtSlot, Qt, QUrl, QVariant
 from qgis.PyQt.QtGui import QColor
 from qgis.PyQt import QtWidgets
@@ -392,8 +392,9 @@ class SensorThingsLocationDialog(WebEngineDialog):
             
             # show rubber band    
             self._rubberBand.show()
-        except:
-            pass
+            
+        except Exception as ex:
+            print(ex)
     
     
     

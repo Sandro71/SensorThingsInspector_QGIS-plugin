@@ -65,8 +65,8 @@ class SensorThingLoadDataTask(QgsTask):
         for t in tasks:
             try:
                 t.cancel_silently()
-            except:
-                pass
+            except Exception as ex:
+                print(ex)
             
     
     @pyqtSlot()
@@ -115,7 +115,7 @@ class SensorThingLoadDataTask(QgsTask):
         
         
     def finished(self, result: bool):
-        """Override finished task method: send resolved\rejected events."""
+        """Override finished task method: send resolved/rejected events."""
         
         # if task cancelled silently, does nothing
         if self._silent_cancel:

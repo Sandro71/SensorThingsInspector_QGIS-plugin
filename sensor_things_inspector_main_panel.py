@@ -458,8 +458,8 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
     def disconnectSignal(self, a_signal, a_slot):
         try:
             a_signal.disconnect(a_slot)
-        except:
-            pass
+        except Exception as ex:
+            print(ex)
     
     
     def setLayer(self, layer):
@@ -747,7 +747,7 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
         
     
     def showTemporalControlWidget(self, show: bool = True):  
-        """Show\Hide canvas temporal control widget"""
+        """Show/Hide canvas temporal control widget"""
         
         # Check if valid temporal control
         temporal_control = iface.mapCanvas().temporalController()   
@@ -759,7 +759,7 @@ class SensorThingsInspectorMainPanel(QtWidgets.QDockWidget, FORM_CLASS):
         if dock_widget is None:
             return
         
-        # Show\Hide dockable widget
+        # Show/Hide dockable widget
         if show:
             dock_widget.show()
         else:

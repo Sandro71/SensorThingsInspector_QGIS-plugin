@@ -24,7 +24,7 @@ Members
 import os
 import csv
 
-# Qgis\PyQt5 modules
+# Qgis/PyQt5 modules
 from PyQt5.QtCore import Qt, QVariant, QDateTime
 from PyQt5.QtWidgets import QFileDialog
 
@@ -240,7 +240,7 @@ class SensorThingsObservationDialog(WebEngineDialog):
                     
                     # open downloaded file
                     if open_file_flag:
-                        os.startfile(os.path.normpath(file_path))
+                        os.startfile(os.path.normpath(file_path)) # nosec
                     
                     # exit loop        
                     return

@@ -67,7 +67,7 @@ class htmlUtil:
         
         root = os.path.dirname( os.path.abspath(__file__) )
         templates_dir = os.path.join(root, 'templates')
-        env = Environment( loader = FileSystemLoader(templates_dir) )
+        env = Environment(loader = FileSystemLoader(templates_dir), autoescape=True)
         env.filters['sn'] = filter_supress_none
         template = env.get_template(template_file)
         return template
