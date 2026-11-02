@@ -6,7 +6,7 @@ name: Pack QGIS plugin
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "main" ]
+    branches: [ "qt6version" ]
     
     paths:
       - 'metadata.txt'
@@ -39,5 +39,5 @@ jobs:
       - name: Step 4 - Archive code coverage results
         uses: actions/upload-artifact@v4
         with:
-          name: SensorThingsAPI-${{ env.PLUGIN_VERSION }}
+          name: SensorThingsAPI-${{ env.PLUGIN_VERSION }}-qt6version
           path: /tmp/SensorThingsAPI
