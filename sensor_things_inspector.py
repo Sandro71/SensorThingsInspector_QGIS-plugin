@@ -198,7 +198,7 @@ class SensorThingsInspectorPlugin(QObject):
         
         self.main_panel.layerSourceChanged.connect(self.onCurrentLayerChanged)
         
-        self.iface.addDockWidget(Qt.RightDockWidgetArea, self.main_panel)
+        self.iface.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.main_panel)
         
         self.iface.currentLayerChanged.connect(self.onCurrentLayerChanged) 
         
@@ -333,16 +333,16 @@ class SensorThingsInspectorPlugin(QObject):
         # add a temporary dock widget
         dock = QDockWidget()
         dock.setFloating(self.main_panel.isFloating())
-        dock.setAllowedAreas(Qt.AllDockWidgetAreas)
-        self.iface.addTabifiedDockWidget(Qt.RightDockWidgetArea, dock)
+        dock.setAllowedAreas(Qt.DockWidgetArea.AllDockWidgetAreas)
+        self.iface.addTabifiedDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, dock)
         
         # need to re add dock widget for bug in Qt
         self.main_panel.setFloating(self.main_panel.isFloating())
-        self.main_panel.setAllowedAreas(Qt.AllDockWidgetAreas)
-        self.iface.addDockWidget(Qt.RightDockWidgetArea, self.main_panel)
+        self.main_panel.setAllowedAreas(Qt.DockWidgetArea.AllDockWidgetAreas)
+        self.iface.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.main_panel)
         
         # Use native addTabifiedDockWidget
-        self.iface.addTabifiedDockWidget(Qt.RightDockWidgetArea, self.main_panel, [dock.accessibleName()], raiseTab=True)
+        self.iface.addTabifiedDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.main_panel, [dock.accessibleName()], raiseTab=True)
         
         # remove temporary dock widget
         self.iface.removeDockWidget(dock)

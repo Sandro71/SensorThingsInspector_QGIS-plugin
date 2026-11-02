@@ -21,6 +21,7 @@ Members
 -------
 """
 from qgis.gui import QgsMapToolIdentifyFeature
+from qgis.core import QgsIdentifyContext
 from qgis.PyQt.QtCore import pyqtSignal
 
 #
@@ -40,7 +41,7 @@ class FeatureSelectionTool(QgsMapToolIdentifyFeature):
         
     def canvasReleaseEvent(self, mouseEvent):
         results = self.identify(
-            mouseEvent.x(), mouseEvent.y(), self.TopDownStopAtFirst, [], self.VectorLayer)
+            mouseEvent.originalPixelPoint().x(), mouseEvent.originalPixelPoint().y(), self.TopDownStopAtFirst, [], self.VectorLayer, QgsIdentifyContext())
         if len(results) > 0:
             res = results[0]
             features = []

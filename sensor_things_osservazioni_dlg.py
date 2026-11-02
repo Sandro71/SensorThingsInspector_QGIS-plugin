@@ -24,9 +24,9 @@ Members
 import os
 import csv
 
-# Qgis/PyQt5 modules
-from PyQt5.QtCore import Qt, QVariant, QDateTime
-from PyQt5.QtWidgets import QFileDialog
+# Qgis\PyQt modules
+from qgis.PyQt.QtCore import Qt, QVariant, QDateTime
+from qgis.PyQt.QtWidgets import QFileDialog
 
 from qgis.PyQt.QtCore import pyqtSlot
 from qgis.PyQt import QtWidgets
@@ -148,11 +148,11 @@ class SensorThingsObservationDialog(WebEngineDialog):
         
         phenomenonTimeStart = row.get('phenomenonTimeStart', '')
         if isinstance(phenomenonTimeStart, QDateTime):
-            phenomenonTimeStart = phenomenonTimeStart.toString(Qt.ISODateWithMs)
+            phenomenonTimeStart = phenomenonTimeStart.toString(Qt.DateFormat.ISODateWithMs)
             
         phenomenonTimeEnd = row.get('phenomenonTimeEnd', '')
         if isinstance(phenomenonTimeEnd, QDateTime):
-            phenomenonTimeEnd = phenomenonTimeEnd.toString(Qt.ISODateWithMs)
+            phenomenonTimeEnd = phenomenonTimeEnd.toString(Qt.DateFormat.ISODateWithMs)
             
         if phenomenonTimeStart and phenomenonTimeEnd:
             return "{}/{}".format(phenomenonTimeStart, phenomenonTimeEnd)

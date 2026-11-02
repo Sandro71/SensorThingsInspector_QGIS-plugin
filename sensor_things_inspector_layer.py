@@ -21,7 +21,7 @@ Author
 Members
 -------
 """
-from PyQt5.QtCore import pyqtSignal, pyqtSlot, QVariant, QCoreApplication
+from qgis.PyQt.QtCore import pyqtSignal, pyqtSlot, QVariant, QCoreApplication
 
 from qgis.core import QgsApplication, QgsDataSourceUri, QgsVectorLayer, QgsFeature, QgsTask
 
@@ -43,7 +43,7 @@ class SensorThingLoadDataTask(QgsTask):
     def __init__(self, ds_uri: QgsDataSourceUri, prefix_attribs: str='', rename_attribs={}):
         """Constructor"""
         
-        super().__init__('SensorThingLoadDataTask', QgsTask.CanCancel)
+        super().__init__('SensorThingLoadDataTask', QgsTask.Flag.CanCancel)
         
         self.uri = ds_uri
         self.rename_attribs = rename_attribs

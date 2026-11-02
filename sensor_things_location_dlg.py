@@ -22,7 +22,7 @@ Members
 -------
 """
 
-# Qgis/PyQt5 modules
+# Qgis/PyQt modules
 from qgis.PyQt.QtCore import pyqtSlot, Qt, QUrl, QVariant
 from qgis.PyQt.QtGui import QColor
 from qgis.PyQt import QtWidgets
@@ -377,13 +377,13 @@ class SensorThingsLocationDialog(WebEngineDialog):
             self._rubberBand.setColor(color)
             self._rubberBand.setFillColor(fillColor)
               
-            if geomType == QgsWkbTypes.PointGeometry:
+            if geomType == QgsWkbTypes.GeometryType.PointGeometry:
                 cfg_styles = plgConfig.get_value('layer/styles', {})
                 properties = cfg_styles.get('default', {})
                 symbol_size = properties.get('pointRadius', 8)
                 
                 self._rubberBand.setWidth(symbol_size * 5)
-                self._rubberBand.setIcon(QgsRubberBand.ICON_CIRCLE)
+                self._rubberBand.setIcon(QgsRubberBand.IconType.ICON_CIRCLE)
                 self._rubberBand.addPoint(geom.asPoint(), True, 0, 0)
             else:
                 self._rubberBand.addGeometry(geom, layer)
@@ -505,7 +505,7 @@ class SensorThingsLocationDialog(WebEngineDialog):
         if tree_layer:
             layer = tree_layer.layer()
             # check if vector layer
-            if layer.type() == QgsMapLayer.VectorLayer:
+            if layer.type() == QgsMapLayer.LayerType.VectorLayer:
                 # show Location info
                 self.show(layer, fid, self._fids)
        

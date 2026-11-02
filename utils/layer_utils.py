@@ -15,8 +15,8 @@
 """
 from functools import partial
 
-from PyQt5.QtCore import Qt, QEventLoop, QVariant, QCoreApplication
-from PyQt5.QtWidgets import QDialog, QComboBox
+from qgis.PyQt.QtCore import Qt, QEventLoop, QVariant, QCoreApplication
+from qgis.PyQt.QtWidgets import QDialog, QComboBox
 from qgis.core import (QgsWkbTypes, 
                        Qgis,
                        QgsApplication,
@@ -25,7 +25,7 @@ from qgis.core import (QgsWkbTypes,
                        QgsMapLayer,
                        QgsVectorLayer, 
                        QgsVectorFileWriter, 
-                       QgsVectorFileWriterTask)
+                       QgsVectorFileWriterTask, NULL)
 from qgis.gui import QgsGui, QgsVectorLayerSaveAsDialog, QgsMessageViewer
 from qgis.utils import iface
 
@@ -61,7 +61,7 @@ class QgisAppFieldValueConverter(QgsVectorFileWriter.FieldValueConverter):
         
         setup = QgsGui.editorWidgetRegistry().findBest( self.__mLayer, self.__mLayer.fields().field( idx ).name() )
         fieldFormatter = QgsApplication.fieldFormatterRegistry().fieldFormatter( setup.type() )
-        v = fieldFormatter.representValue( self.__mLayer, idx, setup.config(), QVariant(), value )
+        v = fieldFormatter.representValue( self.__mLayer, idx, setup.config(), NULL, value )
         return v
        
 
@@ -135,7 +135,7 @@ class LayerUtils:
                                             Qgis.MessageLevel.Success, -1 );
 
         def __onFailure(error: int, errorMessage: str):
-            if error != QgsVectorFileWriter.Canceled:
+            if error != QgsVectorFileWriter.WriterError.Canceled:
                 # Push error meessage on messageBar
                 msgerr = "{}: {}".format( LayerUtils.tr( "Export to vector file failed: " ), errorMessage )
                 
@@ -181,7 +181,7 @@ class LayerUtils:
                         format_combo.removeItem(index)    
         
         # Show export dialog
-        if dialog.exec() != QDialog.Accepted:
+        if dialog.exec() != QDialog.DialogCode.Accepted:
             return vectorFilename
          
         # Export layer
@@ -251,7 +251,7 @@ class LayerUtils:
         
         QgsApplication.taskManager().addTask( writerTask )
         
-        QgsApplication.setOverrideCursor(Qt.WaitCursor)
-        QgsApplication.processEvents(QEventLoop.ExcludeUserInputEvents)
+        QgsApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        QgsApplication.processEvents(QEventLoop.ProcessEventsFlag.ExcludeUserInputEvents)
             
         return vectorFilename

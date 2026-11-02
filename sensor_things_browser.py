@@ -25,9 +25,9 @@ Author(s)
 Members
 -------
 """
-from PyQt5.QtCore import Qt, QUrl, pyqtSignal, pyqtSlot, pyqtProperty 
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QDialog
-from PyQt5.QtQuick import QQuickView
+from qgis.PyQt.QtCore import Qt, QUrl, pyqtSignal, pyqtSlot, pyqtProperty 
+from qgis.PyQt.QtWidgets import QWidget, QVBoxLayout, QDialog
+from PyQt6.QtQuick import QQuickView
 
 from qgis.core import Qgis, QgsMessageLog
 from qgis.gui import QgsGui
@@ -57,7 +57,7 @@ class WebEngineInspectorDialog(QDialog):
         """ """
         super().__init__(parent, flags)
         
-        self.setAttribute(Qt.WA_DeleteOnClose)
+        self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
         
         self.url = DEBUG_URL
        
@@ -72,7 +72,7 @@ class WebEngineInspectorDialog(QDialog):
         
         inspector = QQuickView()
         
-        inspector.setResizeMode(QQuickView.SizeRootObjectToView)
+        inspector.setResizeMode(QQuickView.ResizeMode.SizeRootObjectToView)
         
         inspector.rootContext().setContextProperty("debug_url", self.url)
         
@@ -123,13 +123,13 @@ class WebEngineDialog(QDialog):
         
         view.setTitle(self.tr("SensorThings Identify"))
         
-        view.setResizeMode(QQuickView.SizeRootObjectToView)
+        view.setResizeMode(QQuickView.ResizeMode.SizeRootObjectToView)
 
         view.rootContext().setContextProperty("manager", self)
         
         view.setSource(QUrl.fromLocalFile(QML_DIR+'webengine.qml'))
  
-        if view.status() == QQuickView.Error:
+        if view.status() == QQuickView.Status.Error:
             for error in view.errors():
                 QgsMessageLog.logMessage(error.description())
             return
@@ -168,7 +168,7 @@ class WebEngineDialog(QDialog):
     @pyqtSlot(str)
     def logError(self, message):
         ##logger.log(logger.Level.Critical, message, tag=__QGIS_PLUGIN_NAME__)
-        QgsMessageLog.logMessage(message, "SensorThings", Qgis.Critical)
+        QgsMessageLog.logMessage(message, "SensorThings", Qgis.MessageLevel.Critical)
     
     @pyqtSlot(str)
     def logSslError(self, message):
